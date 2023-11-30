@@ -1,0 +1,5 @@
+/home/oli/git/advent-of-code-2023/build/CMakeFiles/edit_cache.dir
+/home/oli/git/advent-of-code-2023/build/CMakeFiles/rebuild_cache.dir
+/home/oli/git/advent-of-code-2023/build/day1/CMakeFiles/day1.dir
+/home/oli/git/advent-of-code-2023/build/day1/CMakeFiles/edit_cache.dir
+/home/oli/git/advent-of-code-2023/build/day1/CMakeFiles/rebuild_cache.dir
