@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/day2.dir/src/main.cpp.o -o day2  libday2_lib.a 

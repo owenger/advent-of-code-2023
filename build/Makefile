@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /home/oli/git/advent-of-code-2023/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -129,6 +139,45 @@ day1/fast:
 	$(MAKE) $(MAKESILENT) -f day1/CMakeFiles/day1.dir/build.make day1/CMakeFiles/day1.dir/build
 .PHONY : day1/fast
 
+#=============================================================================
+# Target rules for targets named day2_lib
+
+# Build rule for target.
+day2_lib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day2_lib
+.PHONY : day2_lib
+
+# fast build rule for target.
+day2_lib/fast:
+	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/day2_lib.dir/build.make day2/CMakeFiles/day2_lib.dir/build
+.PHONY : day2_lib/fast
+
+#=============================================================================
+# Target rules for targets named day2
+
+# Build rule for target.
+day2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day2
+.PHONY : day2
+
+# fast build rule for target.
+day2/fast:
+	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/day2.dir/build.make day2/CMakeFiles/day2.dir/build
+.PHONY : day2/fast
+
+#=============================================================================
+# Target rules for targets named test_day2
+
+# Build rule for target.
+test_day2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_day2
+.PHONY : test_day2
+
+# fast build rule for target.
+test_day2/fast:
+	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/test_day2.dir/build.make day2/CMakeFiles/test_day2.dir/build
+.PHONY : test_day2/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -137,7 +186,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... day1"
+	@echo "... day2"
+	@echo "... day2_lib"
+	@echo "... test_day2"
 .PHONY : help
 
 

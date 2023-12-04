@@ -5,7 +5,12 @@ project(AdventOfCode)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(GTest REQUIRED)
+enable_testing()
+
 # Add subdirectories for each day
 add_subdirectory(day1)
+add_subdirectory(day2)
+
 # ... add other days as needed
 

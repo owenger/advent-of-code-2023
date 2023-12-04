@@ -1,0 +1,53 @@
+Start testing: Dec 03 22:19 CET
+----------------------------------------------------------
+1/1 Testing: test_day2
+1/1 Test: test_day2
+Command: "/home/oli/git/advent-of-code-2023/build/day2/test_day2"
+Directory: /home/oli/git/advent-of-code-2023/build/day2
+"test_day2" start time: Dec 03 22:19 CET
+Output:
+----------------------------------------------------------
+[==========] Running 2 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from SampleTest
+[ RUN      ] SampleTest.TrueIsTrue
+[       OK ] SampleTest.TrueIsTrue (0 ms)
+[----------] 1 test from SampleTest (0 ms total)
+
+[----------] 1 test from TestExtractColors
+[ RUN      ] TestExtractColors.BasicTest
+Matches: 
+1: 3
+1
+3
+Matches: 
+2: 1
+2
+1
+Matches: 
+3: 8
+3
+8
+Matches: 
+4: 1
+4
+1
+Matches: 
+5: 6
+5
+6
+[       OK ] TestExtractColors.BasicTest (1 ms)
+[----------] 1 test from TestExtractColors (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 2 test suites ran. (1 ms total)
+[  PASSED  ] 2 tests.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_day2" end time: Dec 03 22:19 CET
+"test_day2" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Dec 03 22:19 CET
