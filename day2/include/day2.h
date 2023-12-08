@@ -1,17 +1,36 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
 
 namespace day2 {
 
-enum COLOR { RED, BLUE, GREEN };
+enum COLOUR { RED, BLUE, GREEN };
 
-void getColorValues(const std::string &input_string, int &blue, int &red,
-                    int &green);
+std::vector<std::string> getInput(const std::string &file_path);
 
-void runPartOne();
+inline std::string getColour(const COLOUR &color) {
+  switch (color) {
+  case RED:
+    return "red";
+  case BLUE:
+    return "blue";
+  case GREEN:
+    return "green";
+  default:
+    return "Unknown color";
+  }
+}
 
-void runPartTwo();
+void getColourValues(const std::string &input_string, int &blue, int &red,
+                     int &green);
+
+int getSimpleColourValues(const std::string &input_string, int &blue, int &red,
+                          int &green);
+
+void runPartOne(const std::string &input_path);
+
+void runPartTwo(const std::string &input_path);
 
 } // namespace day2

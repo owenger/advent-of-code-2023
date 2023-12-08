@@ -46,6 +46,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/oli/git/advent-of-code-2023/build/day1/cmake_install.cmake")
   include("/home/oli/git/advent-of-code-2023/build/day2/cmake_install.cmake")
+  include("/home/oli/git/advent-of-code-2023/build/day3/cmake_install.cmake")
 
 endif()
 

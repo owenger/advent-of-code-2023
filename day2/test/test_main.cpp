@@ -11,11 +11,11 @@ std::vector<std::string> TEST_SET = {
 // Write your test cases here
 TEST(SampleTest, TrueIsTrue) { EXPECT_TRUE(true); }
 
-TEST(TestExtractColors, BasicTest) {
-  day2::COLOR s;
+TEST(TestExtractColours, BasicTest) {
+  day2::COLOUR s;
   for (auto &test_string : TEST_SET) {
     int blue, red, green;
-    day2::getColorValues(test_string, blue, red, green);
+    day2::getColourValues(test_string, blue, red, green);
   }
   EXPECT_TRUE(true);
 }

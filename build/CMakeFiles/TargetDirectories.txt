@@ -11,3 +11,9 @@
 /home/oli/git/advent-of-code-2023/build/day2/CMakeFiles/test.dir
 /home/oli/git/advent-of-code-2023/build/day2/CMakeFiles/edit_cache.dir
 /home/oli/git/advent-of-code-2023/build/day2/CMakeFiles/rebuild_cache.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/day3_lib.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/day3.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/test_day3.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/test.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/edit_cache.dir
+/home/oli/git/advent-of-code-2023/build/day3/CMakeFiles/rebuild_cache.dir

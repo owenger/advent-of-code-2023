@@ -1,0 +1,2 @@
+/usr/bin/ar qc libday3_lib.a CMakeFiles/day3_lib.dir/src/day3.cpp.o
+/usr/bin/ranlib libday3_lib.a

@@ -65,16 +65,19 @@ CMAKE_BINARY_DIR = /home/oli/git/advent-of-code-2023/build
 # The main recursive "all" target.
 all: day1/all
 all: day2/all
+all: day3/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
 preinstall: day1/preinstall
 preinstall: day2/preinstall
+preinstall: day3/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: day1/clean
 clean: day2/clean
+clean: day3/clean
 .PHONY : clean
 
 #=============================================================================
@@ -110,6 +113,25 @@ day2/clean: day2/CMakeFiles/day2_lib.dir/clean
 day2/clean: day2/CMakeFiles/day2.dir/clean
 day2/clean: day2/CMakeFiles/test_day2.dir/clean
 .PHONY : day2/clean
+
+#=============================================================================
+# Directory level rules for directory day3
+
+# Recursive "all" directory target.
+day3/all: day3/CMakeFiles/day3_lib.dir/all
+day3/all: day3/CMakeFiles/day3.dir/all
+day3/all: day3/CMakeFiles/test_day3.dir/all
+.PHONY : day3/all
+
+# Recursive "preinstall" directory target.
+day3/preinstall:
+.PHONY : day3/preinstall
+
+# Recursive "clean" directory target.
+day3/clean: day3/CMakeFiles/day3_lib.dir/clean
+day3/clean: day3/CMakeFiles/day3.dir/clean
+day3/clean: day3/CMakeFiles/test_day3.dir/clean
+.PHONY : day3/clean
 
 #=============================================================================
 # Target rules for target day1/CMakeFiles/day1.dir
@@ -196,7 +218,7 @@ day2/CMakeFiles/day2.dir/clean:
 day2/CMakeFiles/test_day2.dir/all: day2/CMakeFiles/day2_lib.dir/all
 	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/test_day2.dir/build.make day2/CMakeFiles/test_day2.dir/depend
 	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/test_day2.dir/build.make day2/CMakeFiles/test_day2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/oli/git/advent-of-code-2023/build/CMakeFiles --progress-num=7,8 "Built target test_day2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/oli/git/advent-of-code-2023/build/CMakeFiles --progress-num=11,12 "Built target test_day2"
 .PHONY : day2/CMakeFiles/test_day2.dir/all
 
 # Build rule for subdir invocation for target.
@@ -214,6 +236,84 @@ test_day2: day2/CMakeFiles/test_day2.dir/rule
 day2/CMakeFiles/test_day2.dir/clean:
 	$(MAKE) $(MAKESILENT) -f day2/CMakeFiles/test_day2.dir/build.make day2/CMakeFiles/test_day2.dir/clean
 .PHONY : day2/CMakeFiles/test_day2.dir/clean
+
+#=============================================================================
+# Target rules for target day3/CMakeFiles/day3_lib.dir
+
+# All Build rule for target.
+day3/CMakeFiles/day3_lib.dir/all:
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3_lib.dir/build.make day3/CMakeFiles/day3_lib.dir/depend
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3_lib.dir/build.make day3/CMakeFiles/day3_lib.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/oli/git/advent-of-code-2023/build/CMakeFiles --progress-num=9,10 "Built target day3_lib"
+.PHONY : day3/CMakeFiles/day3_lib.dir/all
+
+# Build rule for subdir invocation for target.
+day3/CMakeFiles/day3_lib.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day3/CMakeFiles/day3_lib.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 0
+.PHONY : day3/CMakeFiles/day3_lib.dir/rule
+
+# Convenience name for target.
+day3_lib: day3/CMakeFiles/day3_lib.dir/rule
+.PHONY : day3_lib
+
+# clean rule for target.
+day3/CMakeFiles/day3_lib.dir/clean:
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3_lib.dir/build.make day3/CMakeFiles/day3_lib.dir/clean
+.PHONY : day3/CMakeFiles/day3_lib.dir/clean
+
+#=============================================================================
+# Target rules for target day3/CMakeFiles/day3.dir
+
+# All Build rule for target.
+day3/CMakeFiles/day3.dir/all: day3/CMakeFiles/day3_lib.dir/all
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3.dir/build.make day3/CMakeFiles/day3.dir/depend
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3.dir/build.make day3/CMakeFiles/day3.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/oli/git/advent-of-code-2023/build/CMakeFiles --progress-num=7,8 "Built target day3"
+.PHONY : day3/CMakeFiles/day3.dir/all
+
+# Build rule for subdir invocation for target.
+day3/CMakeFiles/day3.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day3/CMakeFiles/day3.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 0
+.PHONY : day3/CMakeFiles/day3.dir/rule
+
+# Convenience name for target.
+day3: day3/CMakeFiles/day3.dir/rule
+.PHONY : day3
+
+# clean rule for target.
+day3/CMakeFiles/day3.dir/clean:
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/day3.dir/build.make day3/CMakeFiles/day3.dir/clean
+.PHONY : day3/CMakeFiles/day3.dir/clean
+
+#=============================================================================
+# Target rules for target day3/CMakeFiles/test_day3.dir
+
+# All Build rule for target.
+day3/CMakeFiles/test_day3.dir/all: day3/CMakeFiles/day3_lib.dir/all
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/test_day3.dir/build.make day3/CMakeFiles/test_day3.dir/depend
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/test_day3.dir/build.make day3/CMakeFiles/test_day3.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/oli/git/advent-of-code-2023/build/CMakeFiles --progress-num=13,14 "Built target test_day3"
+.PHONY : day3/CMakeFiles/test_day3.dir/all
+
+# Build rule for subdir invocation for target.
+day3/CMakeFiles/test_day3.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day3/CMakeFiles/test_day3.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/oli/git/advent-of-code-2023/build/CMakeFiles 0
+.PHONY : day3/CMakeFiles/test_day3.dir/rule
+
+# Convenience name for target.
+test_day3: day3/CMakeFiles/test_day3.dir/rule
+.PHONY : test_day3
+
+# clean rule for target.
+day3/CMakeFiles/test_day3.dir/clean:
+	$(MAKE) $(MAKESILENT) -f day3/CMakeFiles/test_day3.dir/build.make day3/CMakeFiles/test_day3.dir/clean
+.PHONY : day3/CMakeFiles/test_day3.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
