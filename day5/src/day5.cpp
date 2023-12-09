@@ -1,14 +1,12 @@
-#include "day4.h"
-#include <algorithm>
+#include "day5.h"
+#include <deque>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <math.h>
 #include <regex>
-#include <stdio.h>
 #include <string>
 
-namespace day4 {
+namespace day5 {
 
 StringVector getInput(const std::string &file_path) {
   std::fstream input_file;
@@ -24,18 +22,10 @@ StringVector getInput(const std::string &file_path) {
 }
 
 void runPartOne(const std::string &input_path) {
-  StringVector input = getInput(input_path);
-  BoolBitmap bitmap = getBitMap(input);
-  int result = walkVector(input, bitmap);
-  std::cout << "\nResult: " << result << "\n";
+  std::vector<std::string> input = getInput(input_path);
 }
 
 void runPartTwo(const std::string &input_path) {
-  StringVector input = getInput(input_path);
-  PairBitmap bitmap = getPairBitMap(input);
-  walkPairVector(input, bitmap);
-  int sum = sumPairBitmap(bitmap);
-  printf("\nResult: %d", sum);
+  std::vector<std::string> input = getInput(input_path);
 }
-
-} // namespace day4
+} // namespace day5

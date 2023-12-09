@@ -7,3 +7,4 @@
 subdirs("day1")
 subdirs("day2")
 subdirs("day3")
+subdirs("day4")

@@ -1,72 +1,44 @@
-#include "day3.h"
+#include "day4.h"
 #include <gtest/gtest.h>
 
-std::vector<std::string> TEST_SET = {
-    "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-    "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-    "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-    "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-    "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"};
+std::string TEST_INPUT = "Card   1: 99 46 62 | 83 99 62";
+
+day4::StringVector TEST_VECTOR = {
+    "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53",
+    "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19",
+    "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1",
+    "Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83",
+    "Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36",
+    "Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"};
 
 // Write your test cases here
 TEST(SampleTest, TrueIsTrue) { EXPECT_TRUE(true); }
 
-TEST(BitmapTest, BasicTest) {
-  std::vector<std::string> test_input = {"...#4", ".+34.."};
-  std::vector<std::vector<bool>> output = day3::getBitMap(test_input);
-  std::vector<std::vector<bool>> check_output = {
-      {false, false, false, true, false}, {false, true, false, false, false}};
-
-  for (int i = 0; i < output.size(); i++) {
-    for (int j = 0; j < output[i].size(); j++) {
-      EXPECT_EQ(output[i][j], check_output[i][j]);
-    }
+TEST(Day4Tests, ParseTest) {
+  std::vector<int> ticket_numbers;
+  std::set<int> winning_numbers;
+  day4::parseInputString(TEST_INPUT, ticket_numbers, winning_numbers);
+  std::cout << "\nVector: ";
+  for (auto &el : ticket_numbers) {
+    std::cout << " " << std::to_string(el) << ",";
   }
+  EXPECT_EQ(ticket_numbers[0], 99);
+  EXPECT_EQ(winning_numbers.count(83), 1);
+  EXPECT_EQ(winning_numbers.count(99), 1);
 }
 
-TEST(BitmapTest, IsPart) {
-  day3::BoolBitmap test_input = {
-      {true, false, false, false, false, true, false},
-      {false, false, false, false, false, false, false},
-      {false, false, false, false, false, false, false}};
-
-  bool test = day3::checkIfPart(test_input, 1, 2, 3);
-  EXPECT_FALSE(test);
-  test = day3::checkIfPart(test_input, 1, 1, 3);
-  EXPECT_TRUE(test);
+TEST(Day4Tests, NextTest) {
+  std::vector<int> ticket_numbers;
+  std::set<int> winning_numbers;
+  day4::parseInputString(TEST_INPUT, ticket_numbers, winning_numbers);
+  int sum = day4::getScore(ticket_numbers, winning_numbers);
+  std::cout << "\n" << std::to_string(sum) << "\n";
+  EXPECT_EQ(sum, 2);
 }
 
-TEST(BitmapTest, WalkString) {
-  day3::BoolBitmap test_input = {
-      {true, false, false, false, false, true, false},
-      {false, false, false, false, false, false, false},
-      {false, false, false, false, false, false, false}};
-
-  std::string test = "..12...";
-  int value = day3::walkString(test, 1, test_input);
-  EXPECT_EQ(value, 0);
-  test = ".12....";
-  value = day3::walkString(test, 1, test_input);
-  EXPECT_EQ(value, 12);
-}
-
-TEST(BitmapTest, IsPairPart) {
-  std::vector<std::string> test_input = {"...*4", "*+34.."};
-  day3::PairBitmap bitmap = day3::getPairBitMap(test_input);
-  EXPECT_EQ(0, bitmap[0][0].first);
-  EXPECT_EQ(1, bitmap[0][3].first);
-  EXPECT_EQ(1, bitmap[1][0].first);
-}
-
-TEST(BitmapTest, CheckIfPairPart) {
-  day3::PairBitmap test_input = {
-      {{1, 1}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {1, 1}, {0, 0}},
-      {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
-      {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}}};
-
-  day3::checkIfPairPart(test_input, 12, 1, 1, 3);
-  EXPECT_EQ(test_input[0][0].first, 2);
-  EXPECT_EQ(test_input[0][0].second, 12);
+TEST(Day4Tests, Part2Test) {
+  int result = day4::walkBackVector(TEST_VECTOR);
+  EXPECT_EQ(result, 30);
 }
 
 int main(int argc, char **argv) {

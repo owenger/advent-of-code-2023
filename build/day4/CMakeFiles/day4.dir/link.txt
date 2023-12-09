@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/day4.dir/src/main.cpp.o -o day4  libday4_lib.a 
