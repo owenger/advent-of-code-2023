@@ -256,6 +256,45 @@ test_day4/fast:
 	$(MAKE) $(MAKESILENT) -f day4/CMakeFiles/test_day4.dir/build.make day4/CMakeFiles/test_day4.dir/build
 .PHONY : test_day4/fast
 
+#=============================================================================
+# Target rules for targets named day5_lib
+
+# Build rule for target.
+day5_lib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day5_lib
+.PHONY : day5_lib
+
+# fast build rule for target.
+day5_lib/fast:
+	$(MAKE) $(MAKESILENT) -f day5/CMakeFiles/day5_lib.dir/build.make day5/CMakeFiles/day5_lib.dir/build
+.PHONY : day5_lib/fast
+
+#=============================================================================
+# Target rules for targets named day5
+
+# Build rule for target.
+day5: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 day5
+.PHONY : day5
+
+# fast build rule for target.
+day5/fast:
+	$(MAKE) $(MAKESILENT) -f day5/CMakeFiles/day5.dir/build.make day5/CMakeFiles/day5.dir/build
+.PHONY : day5/fast
+
+#=============================================================================
+# Target rules for targets named test_day5
+
+# Build rule for target.
+test_day5: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_day5
+.PHONY : test_day5
+
+# fast build rule for target.
+test_day5/fast:
+	$(MAKE) $(MAKESILENT) -f day5/CMakeFiles/test_day5.dir/build.make day5/CMakeFiles/test_day5.dir/build
+.PHONY : test_day5/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -272,9 +311,12 @@ help:
 	@echo "... day3_lib"
 	@echo "... day4"
 	@echo "... day4_lib"
+	@echo "... day5"
+	@echo "... day5_lib"
 	@echo "... test_day2"
 	@echo "... test_day3"
 	@echo "... test_day4"
+	@echo "... test_day5"
 .PHONY : help
 
 

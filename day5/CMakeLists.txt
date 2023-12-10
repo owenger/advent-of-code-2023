@@ -3,7 +3,7 @@ target_include_directories(day5_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
 
 # Add an executable for the day's problem
 add_executable(day5 src/main.cpp)
-target_link_libraries(day5 day4_lib)
+target_link_libraries(day5 day5_lib)
 
 add_executable(test_day5 test/test_main.cpp)
 target_include_directories(test_day5 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
