@@ -6,8 +6,8 @@ TEST(SampleTest, TrueIsTrue) { EXPECT_TRUE(true); }
 
 TEST(Day5Tests, Map) {
   day5::RecipeMap rm;
-  rm.addMap({0, 10, 5});
-  rm.addMap({21, 80, 20});
+  rm.addMap({10, 0, 5});
+  rm.addMap({80, 21, 20});
   int res0 = rm.map(1);
   EXPECT_EQ(res0, 11);
   int res1 = rm.map(32);

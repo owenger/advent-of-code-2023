@@ -1,6 +1,7 @@
 #include "day5.h"
 #include <deque>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <math.h>
 #include <regex>
@@ -21,6 +22,15 @@ void RecipeMap::clear() { map_vec_.clear(); }
 int RecipeMap::getLength() { return map_vec_.size(); }
 
 int64_t RecipeMap::map(const int64_t &input) const {
+  for (auto &map : map_vec_) {
+    if (input >= map[1] && input < map[1] + map[2]) {
+      return map[0] + input - map[1];
+    }
+  }
+  return input;
+}
+
+int64_t RecipeMap::reverseMap(const int64_t &input) const {
   for (auto &map : map_vec_) {
     if (input >= map[0] && input < map[0] + map[2]) {
       return map[1] + input - map[0];
@@ -73,35 +83,88 @@ void getRecipeMaps(const StringVector &input,
   std::string map_name = "-to-";
   std::regex digits{"(\\d+)\\s+(\\d+)\\s+(\\d+)"};
   for (int i = 0; i < input.size(); i++) {
-    if (input[i].find(map_name) != std::string::npos && started) {
-      recipe_maps.push_back(current_map);
-      current_map.clear();
-      continue;
-    } else if (!started) {
-      started = true;
+    if (started) {
+      std::smatch matches;
+      if (std::regex_search(input[i], matches, digits)) {
+        current_map.addMap({std::stoll(matches[1].str()),
+                            std::stoll(matches[2].str()),
+                            std::stoll(matches[3].str())});
+      }
     }
-    std::smatch matches;
-    if (std::regex_search(input[i], matches, digits)) {
-      current_map.addMap({std::stoll(matches[1].str()),
-                          std::stoll(matches[2].str()),
-                          std::stoll(matches[3].str())});
+    if (input[i].find(map_name) != std::string::npos || i == input.size() - 1) {
+      if (started) {
+        recipe_maps.push_back(current_map);
+        current_map.clear();
+        continue;
+      } else {
+        started = true;
+      }
     }
   }
 }
 
 int64_t runSeeds(const std::vector<int64_t> &seeds,
-                 const std::vector<RecipeMap> &recipe_maps) {
+                 const std::vector<RecipeMap> &recipe_maps, bool verbose) {
   int64_t min = -1;
+  int64_t count = 0;
   for (auto &seed : seeds) {
+    if (verbose) {
+      std::cout << "\nSeed trail: Seed: " << std::to_string(seed);
+    }
     int64_t res = seed;
     for (auto &map : recipe_maps) {
       res = map.map(res);
+      if (verbose) {
+        std::cout << " Next: " << std::to_string(res);
+      }
     }
     if (min == -1 || res < min) {
       min = res;
     }
+    count++;
+    if (count % 1000000 == 0) {
+      double percentage = (double)count / seeds.size() * 100;
+      std::cout << std::fixed << std::setprecision(2);
+      std::cout << "\nProgress: " << percentage << "%\n";
+    }
   }
   return min;
+}
+
+int64_t runReversedSeed(const std::vector<int64_t> &seeds,
+                        const std::vector<RecipeMap> &recipe_maps,
+                        bool verbose) {
+  int64_t max_seed = 0;
+  for (int i = 0; i < seeds.size() - 1; i += 2) {
+    for (int j = 0; j < seeds[i + 1]; j++) {
+      if (seeds[i] + j > max_seed) {
+        max_seed = seeds[i] + j;
+      }
+    }
+  }
+
+  for (int64_t res = 0; res < max_seed; res++) {
+    int64_t seed = res;
+    if (verbose) {
+      std::cout << "\nSeed trail: Seed: " << std::to_string(res);
+    }
+    for (int i = recipe_maps.size() - 1; i >= 0; i--) {
+      seed = recipe_maps[i].reverseMap(seed);
+      if (verbose) {
+        std::cout << " Next: " << std::to_string(seed);
+      }
+    }
+    for (int i = 0; i < seeds.size() - 1; i += 2) {
+      if (seed >= seeds[i] && seed < seeds[i] + seeds[i + 1]) {
+        return res;
+      }
+    }
+
+    if (res % 1000000 == 0) {
+      std::cout << "\nProgress: " << res << "\n";
+    }
+  }
+  return 0;
 }
 
 void runPartOne(const std::string &input_path) {
@@ -115,5 +178,20 @@ void runPartOne(const std::string &input_path) {
 
 void runPartTwo(const std::string &input_path) {
   std::vector<std::string> input = getInput(input_path);
+  std::vector<int64_t> seeds_ranges;
+  std::vector<int64_t> seeds;
+  std::vector<RecipeMap> recipe_maps;
+  parseInput(input, seeds_ranges, recipe_maps);
+  int64_t result = runReversedSeed(seeds_ranges, recipe_maps, false);
+
+  /**
+  for (int64_t i = 0; i < seeds_ranges.size() - 1; i += 2) {
+    for (int64_t j = 0; j < seeds_ranges[i + 1]; j++) {
+      seeds.push_back(seeds_ranges[i] + j);
+    }
+  }
+  int64_t result = runSeeds(seeds, recipe_maps);
+  **/
+  std::cout << "\nResult: " << std::to_string(result) << "\n";
 }
 } // namespace day5

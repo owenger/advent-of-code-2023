@@ -20,6 +20,8 @@ public:
 
   int64_t map(const int64_t &input) const;
 
+  int64_t reverseMap(const int64_t &input) const;
+
   std::vector<std::vector<int64_t>> map_vec_;
 };
 
@@ -34,7 +36,12 @@ void getRecipeMaps(const StringVector &input,
                    std::vector<RecipeMap> &recipe_maps);
 
 int64_t runSeeds(const std::vector<int64_t> &seeds,
-                 const std::vector<RecipeMap> &recipe_maps);
+                 const std::vector<RecipeMap> &recipe_maps,
+                 bool verbose = false);
+
+int64_t runReversedSeed(const std::vector<int64_t> &seeds,
+                        const std::vector<RecipeMap> &recipe_maps,
+                        bool verbose = false);
 
 void runPartOne(const std::string &input_path);
 
