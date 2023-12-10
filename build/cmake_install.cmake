@@ -49,6 +49,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/oli/git/advent-of-code-2023/build/day3/cmake_install.cmake")
   include("/home/oli/git/advent-of-code-2023/build/day4/cmake_install.cmake")
   include("/home/oli/git/advent-of-code-2023/build/day5/cmake_install.cmake")
+  include("/home/oli/git/advent-of-code-2023/build/day6/cmake_install.cmake")
+  include("/home/oli/git/advent-of-code-2023/build/day7/cmake_install.cmake")
 
 endif()
 

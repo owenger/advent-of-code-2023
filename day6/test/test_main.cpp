@@ -1,4 +1,4 @@
-#include "day5.h"
+#include "day6.h"
 #include <gtest/gtest.h>
 
 // Write your test cases here
