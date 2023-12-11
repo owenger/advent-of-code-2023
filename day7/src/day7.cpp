@@ -14,17 +14,18 @@ Hand::Hand(std::string hand, int bidding, bool part2)
 void Hand::evaluateValue() {
   std::vector<int> counts(13, 0);
   for (auto &ch : hand_) {
-    if (ch == 'J' && part2_) {
-      for (auto &count : counts) {
-        count += 1;
-      }
-    }
     counts[getCharValue(ch)] += 1;
   }
   int most = 0;
   int second_most = 0;
 
+  int counter = 0;
   for (auto &count : counts) {
+    if (counter == getCharValue('J') && part2_) {
+      counter++;
+      continue;
+    }
+    counter++;
     if (count > most) {
       second_most = most;
       most = count;
@@ -34,7 +35,9 @@ void Hand::evaluateValue() {
       second_most = count;
     }
   }
-  most += getCharValue('J');
+  if (part2_) {
+    most += counts[getCharValue('J')];
+  }
 
   switch (most) {
   case (5):
@@ -184,7 +187,6 @@ void sortHands(const StringVector &hand_strs, const std::vector<int> &biddings,
                std::vector<Hand> &hands, bool part2) {
   Hand check{hand_strs[0], biddings[0]};
   check.evaluateValue();
-  std::cout << "\nValue: " << std::to_string(check.hand_type_) << "\n";
   hands.push_back(check);
 
   for (int i = 1; i < hand_strs.size(); i++) {
@@ -200,6 +202,9 @@ void sortHands(const StringVector &hand_strs, const std::vector<int> &biddings,
         break;
       }
     }
+  }
+  for (auto &hand : hands) {
+    printf("\nHand: %s, Type: %d", hand.hand_.c_str(), hand.hand_type_);
   }
 }
 
@@ -231,7 +236,7 @@ void runPartTwo(const std::string &input_path) {
   std::vector<int> biddings;
   parseInput(input, hands_strs, biddings);
   std::vector<Hand> hands;
-  sortHands(hands_strs, biddings, hands);
+  sortHands(hands_strs, biddings, hands, true);
   int result = scoreHands(hands);
   printf("\nResult: %d\n", result);
 }
