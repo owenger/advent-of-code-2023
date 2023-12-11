@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/day8.dir/src/main.cpp.o -o day8  libday8_lib.a 

@@ -18,6 +18,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../day5/CMakeLists.txt"
   "../day6/CMakeLists.txt"
   "../day7/CMakeLists.txt"
+  "../day8/CMakeLists.txt"
   "/usr/lib/x86_64-linux-gnu/cmake/GTest/GTestConfig.cmake"
   "/usr/lib/x86_64-linux-gnu/cmake/GTest/GTestConfigVersion.cmake"
   "/usr/lib/x86_64-linux-gnu/cmake/GTest/GTestTargets-none.cmake"
@@ -67,6 +68,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "day5/CMakeFiles/CMakeDirectoryInformation.cmake"
   "day6/CMakeFiles/CMakeDirectoryInformation.cmake"
   "day7/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "day8/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
@@ -90,4 +92,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "day7/CMakeFiles/day7_lib.dir/DependInfo.cmake"
   "day7/CMakeFiles/day7.dir/DependInfo.cmake"
   "day7/CMakeFiles/test_day7.dir/DependInfo.cmake"
+  "day8/CMakeFiles/day8_lib.dir/DependInfo.cmake"
+  "day8/CMakeFiles/day8.dir/DependInfo.cmake"
+  "day8/CMakeFiles/test_day8.dir/DependInfo.cmake"
   )
