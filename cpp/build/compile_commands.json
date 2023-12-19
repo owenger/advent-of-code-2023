@@ -1,0 +1,142 @@
+[
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day1",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day1/include -std=gnu++17 -o CMakeFiles/day1.dir/main.cpp.o -c /home/oli/git/advent-of-code-2023/day1/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day1/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day2",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day2/include -std=gnu++17 -o CMakeFiles/day2_lib.dir/src/day2.cpp.o -c /home/oli/git/advent-of-code-2023/day2/src/day2.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day2/src/day2.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day2",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day2/include -std=gnu++17 -o CMakeFiles/day2.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day2/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day2/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day2",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day2/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day2.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day2/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day2/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day3",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day3/include -std=gnu++17 -o CMakeFiles/day3_lib.dir/src/day3.cpp.o -c /home/oli/git/advent-of-code-2023/day3/src/day3.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day3/src/day3.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day3",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day3/include -std=gnu++17 -o CMakeFiles/day3.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day3/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day3/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day3",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day3/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day3.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day3/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day3/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day4",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day4/include -std=gnu++17 -o CMakeFiles/day4_lib.dir/src/day4.cpp.o -c /home/oli/git/advent-of-code-2023/day4/src/day4.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day4/src/day4.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day4",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day4/include -std=gnu++17 -o CMakeFiles/day4.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day4/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day4/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day4",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day4/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day4.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day4/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day4/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day5",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day5/include -std=gnu++17 -o CMakeFiles/day5_lib.dir/src/day5.cpp.o -c /home/oli/git/advent-of-code-2023/day5/src/day5.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day5/src/day5.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day5",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day5/include -std=gnu++17 -o CMakeFiles/day5.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day5/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day5/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day5",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day5/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day5.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day5/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day5/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day6",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day6/include -std=gnu++17 -o CMakeFiles/day6_lib.dir/src/day6.cpp.o -c /home/oli/git/advent-of-code-2023/day6/src/day6.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day6/src/day6.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day6",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day6/include -std=gnu++17 -o CMakeFiles/day6.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day6/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day6/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day6",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day6/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day6.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day6/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day6/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day7",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day7/include -std=gnu++17 -o CMakeFiles/day7_lib.dir/src/day7.cpp.o -c /home/oli/git/advent-of-code-2023/day7/src/day7.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day7/src/day7.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day7",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day7/include -std=gnu++17 -o CMakeFiles/day7.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day7/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day7/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day7",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day7/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day7.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day7/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day7/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day8",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day8/include -std=gnu++17 -o CMakeFiles/day8_lib.dir/src/day8.cpp.o -c /home/oli/git/advent-of-code-2023/day8/src/day8.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day8/src/day8.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day8",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day8/include -std=gnu++17 -o CMakeFiles/day8.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day8/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day8/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day8",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day8/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day8.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day8/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day8/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day9",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day9/include -std=gnu++17 -o CMakeFiles/day9_lib.dir/src/day9.cpp.o -c /home/oli/git/advent-of-code-2023/day9/src/day9.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day9/src/day9.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day9",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day9/include -std=gnu++17 -o CMakeFiles/day9.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day9/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day9/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day9",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day9/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day9.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day9/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day9/test/test_main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day10",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day10/include -std=gnu++17 -o CMakeFiles/day10_lib.dir/src/day10.cpp.o -c /home/oli/git/advent-of-code-2023/day10/src/day10.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day10/src/day10.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day10",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day10/include -std=gnu++17 -o CMakeFiles/day10.dir/src/main.cpp.o -c /home/oli/git/advent-of-code-2023/day10/src/main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day10/src/main.cpp"
+},
+{
+  "directory": "/home/oli/git/advent-of-code-2023/build/day10",
+  "command": "/usr/bin/c++  -I/home/oli/git/advent-of-code-2023/day10/include -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/test_day10.dir/test/test_main.cpp.o -c /home/oli/git/advent-of-code-2023/day10/test/test_main.cpp",
+  "file": "/home/oli/git/advent-of-code-2023/day10/test/test_main.cpp"
+}
+]

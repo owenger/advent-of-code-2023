@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/day9.dir/src/main.cpp.o -o day9  libday9_lib.a 
