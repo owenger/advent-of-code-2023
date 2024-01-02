@@ -1,3 +1,4 @@
+
 fn main() {
-    println!("Hello, world!");
+    let _ = day11::run_part_1(String::from("data/input.txt"), 1000000);    
 }
