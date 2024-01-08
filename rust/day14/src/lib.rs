@@ -76,6 +76,11 @@ mod block {
 
             Block{ data: data }
         }
+
+        pub fn rotate_block(&self) {
+            let rotated_data = self.data.clone();
+
+        }
     }
 }
 
