@@ -3,9 +3,9 @@ use std::hash::{Hash, Hasher};
 use std::collections::hash_map::DefaultHasher;
 
 #[derive(Eq, PartialEq)]
+#[derive(Debug)]
 pub struct Node {
     pub id: u64,
-    pub pred_id: u64,
     pub cost: u32,
     pub coord: Coord,
     pub dir: Dir,
@@ -16,7 +16,6 @@ impl Node {
     pub fn new() -> Node {
         Node{ 
             id: 0, 
-            pred_id: 0, 
             cost: 0, 
             coord: Coord{ 
                 row: 0, 
@@ -28,20 +27,18 @@ impl Node {
     }
 
     pub fn new_with_hash(
-        pred_id: u64, 
         cost: u32, 
         coord: Coord, 
         dir: Dir, 
         num_steps: u32
     ) -> Node {
-        let hash = Self::calculate_hash(coord, dir, num_steps);
+        let hash = Self::calculate_hash(&coord, &dir, num_steps);
         Node{
             id: hash,
-            pred_id: pred_id,
             cost: cost,
             coord: coord,
             dir: dir,
-            num_steps = num_steps,
+            num_steps: num_steps,
         }
 
     }
@@ -69,14 +66,43 @@ impl PartialOrd for Node {
 
 #[derive(Hash)]
 #[derive(Eq, PartialEq)]
-struct Coord {
-    row: u32,
-    col: u32,
+#[derive(Debug)]
+#[derive(Clone)]
+pub struct Coord {
+    pub row: i32,
+    pub col: i32,
+}
+
+impl Coord {
+    pub fn is_out_of_bounds(&self, rows: i32, cols: i32) -> bool {
+        if self.row < 0 || self.row >= rows || self.col < 0 || self.col >= cols {
+            return true;
+        }
+        false 
+    }
+
+    pub fn move_it(&self, dir: Dir) -> Coord {
+        match dir {
+            Dir::Up =>  return Coord{ row: self.row - 1, col: self.col },
+            Dir::Right => return Coord{ row: self.row, col: self.col + 1 },
+            Dir::Down => return Coord{ row: self.row + 1, col: self.col },
+            Dir::Left => return Coord{ row: self.row, col: self.col - 1 },
+            Dir::No => return Coord{ row: self.row, col: self.col },
+        }
+    }
+
+    pub fn get_cost(&self, grid: &Vec<Vec<u32>>) -> u32 {
+        if self.is_out_of_bounds(grid.len() as i32, grid.first().map_or(0, Vec::len) as i32) {
+            return 0;
+        }
+        grid[self.row as usize][self.col as usize]
+    }
 }
 
 #[derive(Hash)]
 #[derive(Eq, PartialEq)]
-enum Dir {
+#[derive(Debug)]
+pub enum Dir {
     Right,
     Left,
     Up,
