@@ -21,17 +21,27 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     let target_col = rows - 1;
     let max_steps = 3;
 
+    println!("Targets: row: {target_row}, col: {target_col}");
+
     heap.push(node);
+
+
+    let mut max_combo: i32 = 0;
 
     loop {
         let cur = heap.pop().unwrap_or(Node::new());
+
+        if cur.coord.row + cur.coord.col > max_combo {
+            max_combo = cur.coord.row + cur.coord.col;
+            println!("Max combo: {max_combo}");
+        }
 
         // println!("Visited: {:?}\n cur: {:?}", visited, cur);
         // let mut input = String::new();
         // io::stdin().read_line(&mut input)
         //     .expect("Failed to read line");
 
-        if cur.coord.is_out_of_bounds(rows, cols) || visited.contains(&cur.id) {
+        if cur.coord.is_out_of_bounds(rows, cols) || visited.contains(&cur.id) || visited.contains(&cur.min_id) {
             continue;
         }
 

@@ -6,6 +6,7 @@ use std::collections::hash_map::DefaultHasher;
 #[derive(Debug)]
 pub struct Node {
     pub id: u64,
+    pub min_id: u64,
     pub cost: u32,
     pub coord: Coord,
     pub dir: Dir,
@@ -16,6 +17,7 @@ impl Node {
     pub fn new() -> Node {
         Node{ 
             id: 0, 
+            min_id: 0,
             cost: 0, 
             coord: Coord{ 
                 row: 0, 
@@ -33,8 +35,10 @@ impl Node {
         num_steps: u32
     ) -> Node {
         let hash = Self::calculate_hash(&coord, &dir, num_steps);
+        let min_hash = Self::calculate_hash(&coord, &dir, 1);
         Node{
             id: hash,
+            min_id: min_hash,
             cost: cost,
             coord: coord,
             dir: dir,
@@ -50,6 +54,7 @@ impl Node {
         num_steps.hash(&mut hasher);
         hasher.finish()
     }
+
 }
 
 impl Ord for Node {
