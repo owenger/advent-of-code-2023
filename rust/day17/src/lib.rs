@@ -50,7 +50,9 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
             let down_coord = cur.coord.move_it_steps(Dir::Down, mv);
             let left_coord = cur.coord.move_it_steps(Dir::Left, mv);
 
-            if !up_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Up && cur.dir != Dir::Down {
+            if !up_coord.is_out_of_bounds(rows, cols) 
+                && cur.dir != Dir::Up 
+                && cur.dir != Dir::Down {
                 up_cost = up_coord.get_cost(&grid);
                 heap.push(Node::new_with_hash(
                     up_cost,
