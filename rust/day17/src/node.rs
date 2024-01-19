@@ -96,6 +96,16 @@ impl Coord {
         }
     }
 
+    pub fn move_it_steps(&self, dir: Dir, steps: i32) -> Coord {
+        match dir {
+            Dir::Up =>  return Coord{ row: self.row - steps, col: self.col },
+            Dir::Right => return Coord{ row: self.row, col: self.col + steps },
+            Dir::Down => return Coord{ row: self.row + steps, col: self.col },
+            Dir::Left => return Coord{ row: self.row, col: self.col - steps },
+            Dir::No => return Coord{ row: self.row, col: self.col },
+        }
+    }
+
     pub fn get_cost(&self, grid: &Vec<Vec<u32>>) -> u32 {
         if self.is_out_of_bounds(grid.len() as i32, grid.first().map_or(0, Vec::len) as i32) {
             return 0;

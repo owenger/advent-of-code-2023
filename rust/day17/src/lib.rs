@@ -7,6 +7,94 @@ use node::Dir;
 
 pub mod node;
 
+pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
+    let input = fs::read_to_string(input_path)?;
+    let grid = parse_input(input);
+    let mut heap = BinaryHeap::new();
+    let mut visited: Vec<u64> = Vec::new();
+
+    let node = Node::new();
+
+    let rows = grid.len() as i32;
+    let cols = grid.first().map_or(0, Vec::len) as i32;
+    let target_row = cols - 1;
+    let target_col = rows - 1;
+    let max_steps = 3;
+
+    println!("Targets: row: {target_row}, col: {target_col}");
+
+    heap.push(node);
+
+
+    let mut max_combo: i32 = 0;
+
+    loop {
+        let cur = heap.pop().unwrap_or(Node::new());
+
+        if visited.contains(&cur.min_id) {
+            continue;
+        }
+
+        if cur.coord.row == target_row && cur.coord.col == target_col {
+            println!("Result: {}", cur.cost);
+        }
+
+        let mut up_cost: u32 = cur.cost;
+        let mut right_cost: u32 = cur.cost;
+        let mut down_cost: u32 = cur.cost;
+        let mut left_cost: u32 = cur.cost;
+
+        for mv in 1..=4 {
+            let up_coord = cur.coord.move_it_steps(Dir::Up, mv);
+            let right_coord = cur.coord.move_it_steps(Dir::Right, mv);
+            let down_coord = cur.coord.move_it_steps(Dir::Down, mv);
+            let left_coord = cur.coord.move_it_steps(Dir::Left, mv);
+
+            if !up_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Up && cur.dir != Dir::Down {
+                up_cost = up_coord.get_cost(&grid);
+                heap.push(Node::new_with_hash(
+                    up_cost,
+                    up_coord,
+                    Dir::Up,
+                    1,
+                ))
+            }
+
+            if !right_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Right && cur.dir != Dir::Left {
+                right_cost = up_coord.get_cost(&grid);
+                heap.push(Node::new_with_hash(
+                    right_cost,
+                    right_coord,
+                    Dir::Right,
+                    1,
+                ))
+            }
+
+            if !down_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Up && cur.dir != Dir::Down {
+                down_cost = up_coord.get_cost(&grid);
+                heap.push(Node::new_with_hash(
+                    down_cost,
+                    down_coord,
+                    Dir::Down,
+                    1,
+                ))
+            }
+
+            if !left_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Right && cur.dir != Dir::Left {
+                left_cost = up_coord.get_cost(&grid);
+                heap.push(Node::new_with_hash(
+                    left_cost,
+                    left_coord,
+                    Dir::Left,
+                    1,
+                ))
+            }
+        }
+        break;
+    }
+    Ok(())
+}
+
 pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string(input_path)?;
     let grid = parse_input(input);
@@ -36,16 +124,10 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
             println!("Max combo: {max_combo}");
         }
 
-        // println!("Visited: {:?}\n cur: {:?}", visited, cur);
-        // let mut input = String::new();
-        // io::stdin().read_line(&mut input)
-        //     .expect("Failed to read line");
-
         if cur.coord.is_out_of_bounds(rows, cols) || visited.contains(&cur.id) || visited.contains(&cur.min_id) {
             continue;
         }
 
-        // println!("Cost: {}, Coord: {:?}, Preds: {:?}", cur.cost, cur.coord, cur.preds);
         if cur.coord.row == target_row && cur.coord.col == target_col {
             println!("Result: {}", cur.cost);
             break;
