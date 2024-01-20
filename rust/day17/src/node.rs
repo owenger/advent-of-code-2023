@@ -46,13 +46,54 @@ impl Node {
         }
 
     }
+
+    pub fn new_with_small_hash(
+        cost: u32,
+        coord: Coord,
+        dir: Dir,
+        num_steps: u32
+    ) -> Node {
+        let hash = Self::calculate_hash(&coord, &dir, num_steps);
+        let mut min_hash = 0;
+        match dir {
+            Dir::Up => min_hash = Self::calculate_hash(&coord, &Dir::Up, 1),
+            Dir::Right => min_hash = Self::calculate_hash(&coord, &Dir::Right, 1),
+            Dir::Down => min_hash = Self::calculate_hash(&coord, &Dir::Up, 1),
+            Dir::Left => min_hash = Self::calculate_hash(&coord, &Dir::Right, 1),
+            Dir::No => (),
+        }
+        Node{
+            id: hash,
+            min_id: min_hash,
+            cost: cost,
+            coord: coord,
+            dir: dir,
+            num_steps: num_steps,
+        }
+    }
     
-    fn calculate_hash(coord: &Coord, dir: &Dir, num_steps: u32) -> u64 {
+    pub fn calculate_hash(coord: &Coord, dir: &Dir, num_steps: u32) -> u64 {
         let mut hasher = DefaultHasher::new();
         coord.hash(&mut hasher);
         dir.hash(&mut hasher);
         num_steps.hash(&mut hasher);
         hasher.finish()
+    }
+
+    pub fn accumulate_cost(
+        coord: &Coord, 
+        grid: &Vec<Vec<u32>>, 
+        dir: &Dir, 
+        num_steps: u32
+    ) -> u32 {
+        let mut cost: u32 = 0;
+        let mut new_coord = coord.clone();
+
+        for _ in 1..=num_steps {
+            new_coord = new_coord.move_it(dir);
+            cost += new_coord.get_cost(&grid);
+        }
+        cost
     }
 
 }
@@ -86,7 +127,7 @@ impl Coord {
         false 
     }
 
-    pub fn move_it(&self, dir: Dir) -> Coord {
+    pub fn move_it(&self, dir: &Dir) -> Coord {
         match dir {
             Dir::Up =>  return Coord{ row: self.row - 1, col: self.col },
             Dir::Right => return Coord{ row: self.row, col: self.col + 1 },
@@ -96,7 +137,7 @@ impl Coord {
         }
     }
 
-    pub fn move_it_steps(&self, dir: Dir, steps: i32) -> Coord {
+    pub fn move_it_steps(&self, dir: &Dir, steps: i32) -> Coord {
         match dir {
             Dir::Up =>  return Coord{ row: self.row - steps, col: self.col },
             Dir::Right => return Coord{ row: self.row, col: self.col + steps },

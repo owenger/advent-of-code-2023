@@ -1,5 +1,4 @@
 use std::fs;
-use std::io;
 use std::error::Error;
 use std::collections::BinaryHeap;
 use node::Node;
@@ -17,11 +16,8 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
 
     let rows = grid.len() as i32;
     let cols = grid.first().map_or(0, Vec::len) as i32;
-    let target_row = cols - 1;
-    let target_col = rows - 1;
-    let max_steps = 3;
-
-    println!("Targets: row: {target_row}, col: {target_col}");
+    let target_row = rows - 1;
+    let target_col = cols - 1;
 
     heap.push(node);
 
@@ -34,27 +30,38 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
         if visited.contains(&cur.min_id) {
             continue;
         }
+        //println!("Coord: {:?}, Cost: {}, Dir: {:?}", cur.coord, cur.cost, cur.dir);
+
+        let combo = cur.coord.col + cur.coord.row;
+        if combo > max_combo {
+            println!("Max combo: {combo}");
+            max_combo = combo;
+        }
+
+        visited.push(cur.min_id);
 
         if cur.coord.row == target_row && cur.coord.col == target_col {
             println!("Result: {}", cur.cost);
+            break;
         }
 
-        let mut up_cost: u32 = cur.cost;
-        let mut right_cost: u32 = cur.cost;
-        let mut down_cost: u32 = cur.cost;
-        let mut left_cost: u32 = cur.cost;
+        let mut up_cost: u32 = cur.cost + Node::accumulate_cost(&cur.coord, &grid, &Dir::Up, 3);
+        let mut right_cost: u32 = cur.cost + Node::accumulate_cost(&cur.coord, &grid, &Dir::Right, 3);
+        let mut down_cost: u32 = cur.cost + Node::accumulate_cost(&cur.coord, &grid, &Dir::Down, 3);
+        let mut left_cost: u32 = cur.cost + Node::accumulate_cost(&cur.coord, &grid, &Dir::Left, 3);
 
-        for mv in 1..=4 {
-            let up_coord = cur.coord.move_it_steps(Dir::Up, mv);
-            let right_coord = cur.coord.move_it_steps(Dir::Right, mv);
-            let down_coord = cur.coord.move_it_steps(Dir::Down, mv);
-            let left_coord = cur.coord.move_it_steps(Dir::Left, mv);
+        for mv in 4..=10 {
+            let up_coord = cur.coord.move_it_steps(&Dir::Up, mv);
+            let right_coord = cur.coord.move_it_steps(&Dir::Right, mv);
+            let down_coord = cur.coord.move_it_steps(&Dir::Down, mv);
+            let left_coord = cur.coord.move_it_steps(&Dir::Left, mv);
 
+            up_cost += up_coord.get_cost(&grid);
             if !up_coord.is_out_of_bounds(rows, cols) 
                 && cur.dir != Dir::Up 
-                && cur.dir != Dir::Down {
-                up_cost = up_coord.get_cost(&grid);
-                heap.push(Node::new_with_hash(
+                && cur.dir != Dir::Down 
+                && !visited.contains(&Node::calculate_hash(&up_coord, &Dir::Up, 1)) {
+                heap.push(Node::new_with_small_hash(
                     up_cost,
                     up_coord,
                     Dir::Up,
@@ -62,9 +69,12 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
                 ))
             }
 
-            if !right_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Right && cur.dir != Dir::Left {
-                right_cost = up_coord.get_cost(&grid);
-                heap.push(Node::new_with_hash(
+            right_cost += right_coord.get_cost(&grid);
+            if !right_coord.is_out_of_bounds(rows, cols) 
+                && cur.dir != Dir::Right 
+                && cur.dir != Dir::Left 
+                && !visited.contains(&Node::calculate_hash(&right_coord, &Dir::Right, 1)) {
+                heap.push(Node::new_with_small_hash(
                     right_cost,
                     right_coord,
                     Dir::Right,
@@ -72,9 +82,12 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
                 ))
             }
 
-            if !down_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Up && cur.dir != Dir::Down {
-                down_cost = up_coord.get_cost(&grid);
-                heap.push(Node::new_with_hash(
+            down_cost += down_coord.get_cost(&grid);
+            if !down_coord.is_out_of_bounds(rows, cols) 
+                && cur.dir != Dir::Up 
+                && cur.dir != Dir::Down 
+                && !visited.contains(&Node::calculate_hash(&down_coord, &Dir::Up, 1)) {
+                heap.push(Node::new_with_small_hash(
                     down_cost,
                     down_coord,
                     Dir::Down,
@@ -82,9 +95,13 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
                 ))
             }
 
-            if !left_coord.is_out_of_bounds(rows, cols) && cur.dir != Dir::Right && cur.dir != Dir::Left {
-                left_cost = up_coord.get_cost(&grid);
-                heap.push(Node::new_with_hash(
+
+            left_cost += left_coord.get_cost(&grid);
+            if !left_coord.is_out_of_bounds(rows, cols) 
+                && cur.dir != Dir::Right 
+                && cur.dir != Dir::Left 
+                && !visited.contains(&Node::calculate_hash(&left_coord, &Dir::Right, 1)) {
+                heap.push(Node::new_with_small_hash(
                     left_cost,
                     left_coord,
                     Dir::Left,
@@ -92,7 +109,6 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
                 ))
             }
         }
-        break;
     }
     Ok(())
 }
@@ -137,10 +153,10 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
 
         visited.push(cur.id);
 
-        let up_coord = cur.coord.move_it(Dir::Up);
-        let right_coord = cur.coord.move_it(Dir::Right);
-        let down_coord = cur.coord.move_it(Dir::Down);
-        let left_coord = cur.coord.move_it(Dir::Left);
+        let up_coord = cur.coord.move_it(&Dir::Up);
+        let right_coord = cur.coord.move_it(&Dir::Right);
+        let down_coord = cur.coord.move_it(&Dir::Down);
+        let left_coord = cur.coord.move_it(&Dir::Left);
 
         let up_cost = up_coord.get_cost(&grid);
         let right_cost = right_coord.get_cost(&grid);
