@@ -13,16 +13,32 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
 
 fn walk_parts(parts: Vec<Part>, hash_map: HashMap<String, Vec<Instruction>>) -> i32 {
     let mut total: i32 = 0;
-    let cur_key = String::from("in");
-
     for part in parts {
-        if let Some(instructions) = hash_map.get(&cur_key) {
+        total += do_part(&part, &hash_map);
+    }
+    println!("Total: {total}");
+    0
+}
 
+fn do_part(part: &Part, hash_map: &HashMap<String, Vec<Instruction>>) -> i32 {
+    let mut cur_key = String::from("in");
+    'outer: loop {
+        if let Some(instructions) = hash_map.get(&cur_key) {
+            for i in 0..instructions.len() {
+                match instructions[i].check(part) {
+                    Res::Next => continue,
+                    Res::Accepted => return part.x + part.m + part.a + part.s,
+                    Res::Rejected => return 0,
+                    Res::Forwarded(place) => {
+                        cur_key = place;
+                        continue 'outer;
+                    }
+                }
+            }
         } else {
             println!("Fail");
         }
     }
-    total
 }
 
 fn parse_input(input: String) -> (Vec<Part>, HashMap<String, Vec<Instruction>>) {
@@ -86,6 +102,7 @@ fn interpret_construction_str(input: &str) -> Vec<Instruction> {
 
 }
 
+#[derive(Debug)]
 struct Part {
     pub x: i32,
     pub m: i32,
@@ -112,13 +129,34 @@ impl Instruction {
         Instruction{ part: 'x', compare_gt: false, number: 0, res: Res::Rejected }
     }
 
-    pub fn check(&self, )
+    pub fn check(&self, part: &Part) -> Res {
+        let mut number: i32 = 0;
+        match self.part {
+            'x' => number = part.x,
+            'm' => number = part.m,
+            'a' => number = part.a,
+            's' => number = part.s,
+            _ => (),
+        }
+        if self.compare_gt {
+            if number > self.number {
+                return self.res.clone();
+            }
+        } else {
+            if number < self.number {
+                return self.res.clone();
+            }
+        }
+        Res::Next
+    }
 }
 
+#[derive(Clone)]
 #[derive(Debug)]
 enum Res {
     Accepted,
     Rejected,
+    Next,
     Forwarded(String),
 }
 
