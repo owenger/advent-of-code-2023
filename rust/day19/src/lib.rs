@@ -17,6 +17,8 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string(input_path)?;
     let (_, instructions) = parse_input(input, false);
     println!("After");
+    let res = do_part_ranges(&instructions, &RangePart::new(), &Res::Forwarded(String::from("in")));
+    println!("Result: {res}");
 
     Ok(())
 }
@@ -24,32 +26,36 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
 fn do_part_ranges(
     hash_map: &HashMap<String, Vec<Instruction>>, 
     range_part: &RangePart, 
-    res: Res
-    ) -> i32 {
-    let key: String = String::new();
-    match Res {
+    res: &Res
+    ) -> i64 {
+    //println!("Checking range: {:?} on res: {:?}", range_part, res);
+    let mut key: String = String::new();
+    match res {
         Res::Accepted => {
-            (range_part.x.1 - range_part.x.0) + (range_part.m.1 - range_part.m.0)
-            + (range_part.a.1 - range_part.a.0) + (range_part.s.1 - range_part.s.0);
+            return (range_part.x.1 - range_part.x.0 + 1) 
+            * (range_part.m.1 - range_part.m.0 + 1)
+            * (range_part.a.1 - range_part.a.0 + 1) 
+            * (range_part.s.1 - range_part.s.0 + 1);
         }
         Res::Rejected => return 0,
-        Res::Forwarded(to) => key = to,
+        Res::Forwarded(to) => key = to.clone(),
+        Res::Next => (),
     }
-    let mut total: i32 = 0;
-    let mut gets_res: (i32, i32) = (0, 0);
+
+    let mut total: i64 = 0;
+    let mut gets_res = range_part.clone();
     let mut continues = range_part.clone();
     if let Some(instructions) = hash_map.get(&key) {
         for i in 0..instructions.len() {
-            (gets_res, continues) = instructions[i].check_range(gets_res);
-            total += do_part_ranges(hash_map, &gets_res, instructions[i].res)
+            (gets_res, continues) = instructions[i].check_range(continues);
+            total += do_part_ranges(hash_map, &gets_res, &instructions[i].res)
         }
-
     }
     total
 }
 
-fn walk_parts(parts: Vec<Part>, hash_map: HashMap<String, Vec<Instruction>>) -> i32 {
-    let mut total: i32 = 0;
+fn walk_parts(parts: Vec<Part>, hash_map: HashMap<String, Vec<Instruction>>) -> i64 {
+    let mut total: i64 = 0;
     for part in parts {
         total += do_part(&part, &hash_map);
     }
@@ -57,7 +63,7 @@ fn walk_parts(parts: Vec<Part>, hash_map: HashMap<String, Vec<Instruction>>) -> 
     0
 }
 
-fn do_part(part: &Part, hash_map: &HashMap<String, Vec<Instruction>>) -> i32 {
+fn do_part(part: &Part, hash_map: &HashMap<String, Vec<Instruction>>) -> i64 {
     let mut cur_key = String::from("in");
     'outer: loop {
         if let Some(instructions) = hash_map.get(&cur_key) {
@@ -94,10 +100,10 @@ fn parse_input(input: String, get_parts: bool) -> (Vec<Part>, HashMap<String, Ve
         }
         if get_parts {
             if let Some(caps) = second_re.captures(line) {
-                let x: i32 = caps.get(1).unwrap().as_str().parse().unwrap_or(0);
-                let m: i32 = caps.get(2).unwrap().as_str().parse().unwrap_or(0);
-                let a: i32 = caps.get(3).unwrap().as_str().parse().unwrap_or(0);
-                let s: i32 = caps.get(4).unwrap().as_str().parse().unwrap_or(0);
+                let x: i64 = caps.get(1).unwrap().as_str().parse().unwrap_or(0);
+                let m: i64 = caps.get(2).unwrap().as_str().parse().unwrap_or(0);
+                let a: i64 = caps.get(3).unwrap().as_str().parse().unwrap_or(0);
+                let s: i64 = caps.get(4).unwrap().as_str().parse().unwrap_or(0);
                 parts.push(Part { x: x, m: m, a: a, s: s });
         }
         }
@@ -143,10 +149,10 @@ fn interpret_construction_str(input: &str) -> Vec<Instruction> {
 
 #[derive(Debug)]
 struct Part {
-    pub x: i32,
-    pub m: i32,
-    pub a: i32,
-    pub s: i32,
+    pub x: i64,
+    pub m: i64,
+    pub a: i64,
+    pub s: i64,
 }
 
 impl Part {
@@ -158,10 +164,10 @@ impl Part {
 #[derive(Debug)]
 #[derive(Clone)]
 struct RangePart {
-    pub x: (i32, i32),
-    pub m: (i32, i32),
-    pub a: (i32, i32),
-    pub s: (i32, i32),
+    pub x: (i64, i64),
+    pub m: (i64, i64),
+    pub a: (i64, i64),
+    pub s: (i64, i64),
 }
 
 impl RangePart {
@@ -174,7 +180,7 @@ impl RangePart {
 struct Instruction {
     part: char,
     compare_gt: bool,
-    number: i32,
+    number: i64,
     res: Res,
 }
 
@@ -184,7 +190,7 @@ impl Instruction {
     }
 
     pub fn check(&self, part: &Part) -> Res {
-        let mut number: i32 = 0;
+        let mut number: i64 = 0;
         match self.part {
             'x' => number = part.x,
             'm' => number = part.m,
@@ -208,8 +214,8 @@ impl Instruction {
         let mut gets_res = range_part.clone();
         let mut continues = range_part.clone();
 
-        let mut gets_res_range: &mut (i32, i32) = &mut gets_res.x;
-        let mut continues_range: &mut (i32, i32) = &mut continues.x;
+        let mut gets_res_range: &mut (i64, i64) = &mut gets_res.x;
+        let mut continues_range: &mut (i64, i64) = &mut continues.x;
         match self.part {
             'x' => (),
             'm' => {
@@ -231,7 +237,7 @@ impl Instruction {
             continues_range.1 = cmp::min(continues_range.1, self.number);
         } else {
             gets_res_range.1 = cmp::min(gets_res_range.1, self.number - 1);
-            continues_range.0 = cmp::min(continues_range.0, self.number);
+            continues_range.0 = cmp::max(continues_range.0, self.number);
         }
 
         (gets_res, continues)
@@ -250,6 +256,32 @@ enum Res {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_range_check() {
+        let instr = Instruction{ part: 'x', compare_gt: false, number: 50, res: Res::Accepted };
+        let range_part = RangePart::new();
+        let (res, cont) = instr.check_range(range_part);
+        assert_eq!(res.x.0, 1);
+        assert_eq!(res.x.1, 49);
+        assert_eq!(cont.x.0, 50);
+        assert_eq!(cont.x.1, 4000);
+    }
+
+    #[test]
+    fn test_range_check1() {
+        let instr = Instruction{ part: 'x', compare_gt: false, number: 50, res: Res::Accepted };
+        let range_part = RangePart::new();
+        let (mut res, mut cont) = instr.check_range(range_part);
+        println!("Res: {:?}, Cont: {:?}", res.x, cont.x);
+        let new_instr = Instruction{ part: 'x', compare_gt: true, number: 400, res: Res::Accepted };
+        (res, cont) = new_instr.check_range(cont);
+        println!("Res: {:?}, Cont: {:?}", res.x, cont.x);
+        assert_eq!(cont.x.0, 50);
+        assert_eq!(cont.x.1, 400);
+        assert_eq!(res.x.0, 401);
+        assert_eq!(res.x.1, 4000);
+    }
 
     #[test]
     fn test_get_adding_y_vectors() {
