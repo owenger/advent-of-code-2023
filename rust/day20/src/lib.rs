@@ -7,22 +7,52 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+struct Pulse {
+    origin: String,
+    destination: String,
+    is_high: bool,
+}
+
 struct FlipFlop {
+    name: String,
     state: bool,
+    destinations: Vec<String>,
+}
+
+struct Conj {
+    name: String,
+    inputs: HashMap<String, bool>,
+    destinations: Vec<String>,
 }
 
 impl Pulsar for FlipFlop {
-    fn receive_pulse(&self, pulse: bool) -> Option<bool> {
-        if !pulse {
+    fn receive_pulse(&mut self, pulse: Pulse) -> Vec<Pulse> {
+        let mut pulse_out: Vec<Pulse> = Vec::new();
+        if !pulse.is_high {
             self.state = !self.state;
-            return Some(true);
+            for i in 0..self.destinations.len() {
+                pulse_out.push(
+                    Pulse{
+                        origin: self.name.clone(),
+                        destination: self.destinations[i].clone(),
+                        is_high: true
+                    })
+            }
         }
-        None
+        pulse_out
     }
 }
 
-trait Pulsar {
-    pub fn receive_pulse(&self, pulse: bool) -> Option<bool>;
+impl Pulsar for Conj {
+    fn receive_pulse(&mut self, pulse: Pulse) -> Vec<Pulse> {
+        let mut pulse_out: Vec<Pulse> = Vec::new();
+        self.inputs.insert(pulse.origin, pulse.is_high);
+        let all_highs = !self.inputs.any(|&value| value == false);
+    }
+}
+
+pub trait Pulsar {
+    fn receive_pulse(&mut self, pulse: Pulse) -> Vec<Pulse>;
 }
 
 #[cfg(test)]
