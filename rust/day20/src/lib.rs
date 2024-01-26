@@ -38,7 +38,7 @@ fn push_button(hash: &mut HashMap<String, Box<dyn Pulsar>>, part2: bool) {
 
         while let Some(cur_pulse) = to_process.pop_front() {
             if freq_nodes.contains(&cur_pulse.origin) && !cur_pulse.is_high {
-                count_freqs.push(count + 1);
+                count_freqs.entry(cur_pulse.origin.clone()).or_insert(count + 1);
                 if count_freqs.len() == 4 {
                     break 'outer;
                 }
@@ -64,8 +64,22 @@ fn push_button(hash: &mut HashMap<String, Box<dyn Pulsar>>, part2: bool) {
             break;
         }
     }
-    println!("Freqs: {:?}", count_freqs);
-    //println!("Res: {}", count_pulses(&pulses));
+    
+    if part2 {
+        let res_vec: Vec<i64> = count_freqs.values().cloned().collect();
+        let res = res_vec.iter()
+                        .copied()
+                        .reduce(|a, b| lcm(a, b))
+                        .unwrap_or(0);
+        // let res = count_freqs.values().collect().iter()
+        //                                         .copied()
+        //                                         .reduce(|a, b| lcm(a, b))
+        //                                         .unwrap_or(0)
+        println!("Res: {res}");
+
+    } else {
+        println!("Res: {}", count_pulses(&pulses));
+    }
 }
 
 fn count_pulses(pulses: &Vec<(i64, i64)>) -> i64 {
@@ -77,6 +91,18 @@ fn count_pulses(pulses: &Vec<(i64, i64)>) -> i64 {
         high += pulse.1;
     }
     low * high
+}
+
+fn gcd(a: i64, b: i64) -> i64 {
+    if b == 0 {
+        a.abs()
+    } else {
+        gcd(b, a % b)
+    }
+}
+
+fn lcm(a: i64, b: i64) -> i64 {
+    a.abs() / gcd(a, b) * b.abs()
 }
 
 fn check_if_default(hash: &HashMap<String, Box<dyn Pulsar>>) -> bool {
