@@ -24,6 +24,8 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
 fn push_button(hash: &mut HashMap<String, Box<dyn Pulsar>>, part2: bool) {
     let mut pulses: Vec<(i64, i64)> = Vec::new();
     let mut count = 0;
+    let mut count_freqs: HashMap<String, i64> = HashMap::new();
+    let freq_nodes = vec![String::from("jz"), String::from("sl"), String::from("pq"), String::from("rr")];
     'outer: loop {
         let mut count_low = 0;
         let mut count_high = 0;
@@ -35,10 +37,10 @@ fn push_button(hash: &mut HashMap<String, Box<dyn Pulsar>>, part2: bool) {
         });
 
         while let Some(cur_pulse) = to_process.pop_front() {
-            if cur_pulse.origin == String::from("bq") && cur_pulse.destination == String::from("ft"){
-                if !cur_pulse.is_high {
-                    println!("Part 2 Res: {}", count + 1);
-                    //break 'outer;
+            if freq_nodes.contains(&cur_pulse.origin) && !cur_pulse.is_high {
+                count_freqs.push(count + 1);
+                if count_freqs.len() == 4 {
+                    break 'outer;
                 }
             }
             if cur_pulse.is_high {
@@ -62,7 +64,8 @@ fn push_button(hash: &mut HashMap<String, Box<dyn Pulsar>>, part2: bool) {
             break;
         }
     }
-    println!("Res: {}", count_pulses(&pulses));
+    println!("Freqs: {:?}", count_freqs);
+    //println!("Res: {}", count_pulses(&pulses));
 }
 
 fn count_pulses(pulses: &Vec<(i64, i64)>) -> i64 {
