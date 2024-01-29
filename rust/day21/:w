@@ -2,13 +2,10 @@ use std::fs;
 use std::error::Error;
 use std::collections::HashMap;
 use std::collections::BinaryHeap;
+use std::cmp;
 use std::cmp::Ordering;
 
-const MAX_INPUT: i32 = 26501365;
 const FINDABLE_FIELDS: i32 = 7498;
-const MIN_STEPS_CENTER: i32 = 129;
-const MIN_STEPS_TOP_LEFT: i32 = 259;
-const MIN_STEPS_BOTTOM_LEFT: i32 = 259;
 
 pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     let max_steps = 64;
@@ -22,13 +19,15 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
-    let input_nr: i32 = MIN_STEPS_BOTTOM_LEFT - 10;
+    let input_nr: i32 = 26501365;
     let input = fs::read_to_string(input_path)?;
     let mut grid = parse_input(input);
-    grid.start_row = grid.rows - 1;
-    grid.start_col = 0;
+    let start_row = grid.start_row;
+    let start_col = grid.start_col;
+    let max_steps = cmp::min(input_nr, grid.rows * grid.cols);
     let mut total: i32 = 0;
-    total = dijkstras(&mut grid, input_nr);
+    total = dijkstras(&mut grid, max_steps);
+    //let total = walk_grid(&mut grid, start_row, start_col, max_steps);
     println!("Total: {total}");
     Ok(())
 }
@@ -48,40 +47,40 @@ fn dijkstras(grid: &mut Grid, max_steps: i32) -> i32 {
             continue;
         }
         visited.push((cur_cell.row, cur_cell.col));
+        // if visited.len() as i32 == FINDABLE_FIELDS {
+        //     return visited.len() as i32;
+        // }
         if cur_cell.cost % 2 == 0 {
             count += 1;
-        }
-        if count == FINDABLE_FIELDS {
-            println!("Max steps: {}", max_steps - cur_cell.cost);
-            return count;
         }
         if cur_cell.cost == 0 {
             continue;
         }
         if cur_cell.row > 0 {
             let next_cell = Cell{ row: cur_cell.row - 1, col: cur_cell.col, cost: cur_cell.cost - 1 };
-            if grid.grid[next_cell.row as usize][next_cell.col as usize] && !visited.contains(&(next_cell.row, next_cell.col)) {
+            if !visited.contains(&next_cell) {
                 heap.push(next_cell);
             }
         }
         if cur_cell.col > 0 {
             let next_cell = Cell{ row: cur_cell.row, col: cur_cell.col - 1, cost: cur_cell.cost - 1 };
-            if grid.grid[next_cell.row as usize][next_cell.col as usize] && !visited.contains(&(next_cell.row, next_cell.col)) {
+            if !visited.contains(&next_cell) {
                 heap.push(next_cell);
             }
         }
         if cur_cell.row < grid.rows - 1 {
             let next_cell = Cell{ row: cur_cell.row + 1, col: cur_cell.col, cost: cur_cell.cost - 1 };
-            if grid.grid[next_cell.row as usize][next_cell.col as usize] && !visited.contains(&(next_cell.row, next_cell.col)) {
+            if !visited.contains(&next_cell) {
                 heap.push(next_cell);
             }
         }
-        if cur_cell.col < grid.cols - 1 {
-            let next_cell = Cell{ row: cur_cell.row, col: cur_cell.col + 1, cost: cur_cell.cost - 1 };
-            if grid.grid[next_cell.row as usize][next_cell.col as usize] && !visited.contains(&(next_cell.row, next_cell.col)) {
+        if cur_cell.row < grid.rows - 1 {
+            let next_cell = Cell{ row: cur_cell.row + 1, col: cur_cell.col, cost: cur_cell.cost - 1 };
+            if !visited.contains(&next_cell) {
                 heap.push(next_cell);
             }
         }
+        println!("{count}");
     }
     count
 }
