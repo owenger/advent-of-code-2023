@@ -6,9 +6,8 @@ use std::cmp::Ordering;
 
 const MAX_INPUT: i32 = 26501365;
 const FINDABLE_FIELDS: i32 = 7498;
-const MIN_STEPS_CENTER: i32 = 129;
-const MIN_STEPS_TOP_LEFT: i32 = 259;
-const MIN_STEPS_BOTTOM_LEFT: i32 = 259;
+const MIN_STEPS_EDGE: i32 = 181;
+const MIN_STEPS_CORNER: i32 = 259;
 
 pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     let max_steps = 64;
@@ -22,14 +21,54 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
-    let input_nr: i32 = MIN_STEPS_BOTTOM_LEFT - 10;
+    let input_nr: i32 = MAX_INPUT;
     let input = fs::read_to_string(input_path)?;
     let mut grid = parse_input(input);
+    let mut total: i32 = FINDABLE_FIELDS;
+    let number_of_1d: i32 = (150 - (grid.rows + 1) / 2) / grid.rows;
+    let remainder_1d: i32 = (150 - (grid.rows + 1) / 2) % grid.rows;
+    println!("{number_of_1d}, {remainder_1d}");
+    return Ok(());
+
+    // going up
     grid.start_row = grid.rows - 1;
-    grid.start_col = 0;
-    let mut total: i32 = 0;
-    total = dijkstras(&mut grid, input_nr);
+    let mut steps_left = MAX_INPUT - (grid.rows + 1) / 2;
+    loop {
+        if steps_left <= 0 {
+            break;
+        }
+        if steps_left >= MIN_STEPS_EDGE {
+            total += FINDABLE_FIELDS;
+            steps_left -= grid.rows;
+            continue;
+        }
+        total += dijkstras(&mut grid, input_nr);
+        steps_left -= grid.rows;
+    }
+
+    // going down
+    grid.start_row = 0;
+    steps_left = MAX_INPUT - (grid.rows + 1) / 2;
+    loop {
+        if steps_left <= 0 {
+            break;
+        }
+        if steps_left >= MIN_STEPS_EDGE {
+            total += FINDABLE_FIELDS;
+            steps_left -= grid.rows;
+            continue;
+        }
+        total += dijkstras(&mut grid, input_nr);
+        steps_left -= grid.rows;
+    }
+
+
+
     println!("Total: {total}");
+    // grid.start_row = grid.start_row;
+    // grid.start_col = grid.cols - 1;
+    // total = dijkstras(&mut grid, input_nr);
+    // println!("Total: {total}");
     Ok(())
 }
 
