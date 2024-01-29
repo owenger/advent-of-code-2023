@@ -1,6 +1,7 @@
 use std::fs;
 use std::error::Error;
 use std::collections::BinaryHeap;
+ust std::cmp::Ordering;
 use node::Node;
 use node::Dir;
 
