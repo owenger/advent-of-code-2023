@@ -17,36 +17,46 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn get_number_of_falls(deps: &HashMap<i32, Vec<i32>>) -> i32 {
-    let mut reversed_deps: HashMap<i32, Vec<i32>> = HashMap::new();
+fn get_number_of_falls(deps: &HashMap<i32, Vec<i32>>, removable: &[i32]) -> i32 {
+    let mut fallen: Vec<i32> = Vec::new();
 
     for (key, value) in deps.iter() {
-        if value.len() == 1 {
-            reversed_deps.entry(*value.first().unwrap()).or_insert_with(Vec::new).push(*key);
-        }
+
     }
-    println!("rd: {:?}", reversed_deps);
-
-    let mut total: i32 = 0;
-
-    for (key, value) in reversed_deps.iter() {
-        let mut to_analyze = value.clone();
-        total += to_analyze.len() as i32;
-        loop {
-            if to_analyze.len() == 0 {
-                break;
-            }
-            let check = to_analyze.pop().unwrap();
-            if let Some(vec) = reversed_deps.get(&check) {
-                total += vec.len() as i32;
-                to_analyze.extend(vec);
-            }
-        }
-    }
-    println!("cnt: {total}");
-
-
+    
     0
+
+
+
+    // let mut reversed_deps: HashMap<i32, Vec<i32>> = HashMap::new();
+    //
+    // for (key, value) in deps.iter() {
+    //     if value.len() == 1 {
+    //         reversed_deps.entry(*value.first().unwrap()).or_insert_with(Vec::new).push(*key);
+    //     }
+    // }
+    // println!("rd: {:?}", reversed_deps);
+    //
+    // let mut total: i32 = 0;
+    //
+    // for (key, value) in reversed_deps.iter() {
+    //     let mut to_analyze = value.clone();
+    //     total += to_analyze.len() as i32;
+    //     loop {
+    //         if to_analyze.len() == 0 {
+    //             break;
+    //         }
+    //         let check = to_analyze.pop().unwrap();
+    //         if let Some(vec) = reversed_deps.get(&check) {
+    //             total += vec.len() as i32;
+    //             to_analyze.extend(vec);
+    //         }
+    //     }
+    // }
+    // println!("cnt: {total}");
+
+
+    // 0
 }
 
 fn get_removable(deps: &HashMap<i32, Vec<i32>>) -> Vec<i32> {
