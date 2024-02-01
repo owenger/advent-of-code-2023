@@ -11,52 +11,52 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     pieces.sort();
     let support_dependencies = walk_pieces(&pieces);
     let removable = get_removable(&support_dependencies);
-    let falls = get_number_of_falls(&support_dependencies);
+    let falls = get_number_of_falls(&support_dependencies, &removable);
     println!("Part 1 Res: {}", removable.len());
+    println!("Part 2 Res: {}", falls);
     
     Ok(())
 }
 
 fn get_number_of_falls(deps: &HashMap<i32, Vec<i32>>, removable: &[i32]) -> i32 {
-    let mut fallen: Vec<i32> = Vec::new();
+    let mut total: i32 = 0;
+    let mut reversed_deps: HashMap<i32, Vec<i32>> = HashMap::new();
 
     for (key, value) in deps.iter() {
-
+        for i in 0..value.len() {
+            reversed_deps.entry(value[i]).or_insert_with(Vec::new).push(*key);
+        }
     }
-    
-    0
 
+    for (key, value) in deps.iter() {
+        if removable.contains(&key) {
+            continue;
+        }
+        let mut spec_deps = deps.clone();
+        let mut fallen: Vec<i32> = Vec::new();
+        let mut to_check: Vec<i32> = vec![*key];
 
-
-    // let mut reversed_deps: HashMap<i32, Vec<i32>> = HashMap::new();
-    //
-    // for (key, value) in deps.iter() {
-    //     if value.len() == 1 {
-    //         reversed_deps.entry(*value.first().unwrap()).or_insert_with(Vec::new).push(*key);
-    //     }
-    // }
-    // println!("rd: {:?}", reversed_deps);
-    //
-    // let mut total: i32 = 0;
-    //
-    // for (key, value) in reversed_deps.iter() {
-    //     let mut to_analyze = value.clone();
-    //     total += to_analyze.len() as i32;
-    //     loop {
-    //         if to_analyze.len() == 0 {
-    //             break;
-    //         }
-    //         let check = to_analyze.pop().unwrap();
-    //         if let Some(vec) = reversed_deps.get(&check) {
-    //             total += vec.len() as i32;
-    //             to_analyze.extend(vec);
-    //         }
-    //     }
-    // }
-    // println!("cnt: {total}");
-
-
-    // 0
+        loop {
+            if to_check.len() == 0 {
+                break;
+            }
+            let check_key = to_check.pop().unwrap();
+            if !reversed_deps.contains_key(&check_key) {
+                continue;
+            }
+            let supports = reversed_deps.get(&check_key).unwrap().clone();
+            for support in supports {
+                if let Some(vec) = spec_deps.get_mut(&support) {
+                    vec.retain(|&x| x != check_key);
+                    if vec.len() == 0 {
+                        to_check.push(support);
+                        total += 1;
+                    }
+                }
+            }
+        }
+    }
+    total
 }
 
 fn get_removable(deps: &HashMap<i32, Vec<i32>>) -> Vec<i32> {
