@@ -16,6 +16,13 @@ fn dijkstra(grid: &Vec<Vec<char>>) -> i32 {
     let start_col = get_start_col(grid);
     let start_node = Node{ cost: 0, coord: (0, start_col), history: Vec::new()};
     heap.push(start_node);
+    
+    loop {
+        if heap.len() == 0 {
+            break;
+        }
+        let cur_node = heap.pop();
+    }
     0
 }
 
