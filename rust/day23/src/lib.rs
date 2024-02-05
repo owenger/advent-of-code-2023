@@ -230,23 +230,32 @@ impl Grid {
             }
             let cur_node = nodes_to_check.pop();
 
+            if self.can_go(&cur_node, &Dir::Right) {
+                
 
+            }
         }
-
-
     }
 
-    fn run_path(&self, coord: &Coord, from_dir: Dir, cost: u32, nodes_to_check: &mut Vec<Coord>) -> u32 {
+    fn run_path(&self, coord: Coord, from_dir: Dir, nodes_to_check: &mut Vec<Coord>) -> u32 {
+        let mut cost: u32 = 1;
         if self.number_of_non_neighbours(&coord, '#')  > 1 {
             nodes_to_check.push(coord.clone());
             return cost;
         }
         if from_dir != Dir::Left && self.can_go(&coord, Dir::Right) {
-            cost += self.run_path(Coord{ row: coord.row, col: coord.col + 1 });
+            cost += self.run_path(Coord{ row: coord.row, col: coord.col + 1 }, Dir::Left, nodes_to_check);
         }
-        0
-        
-
+        if from_dir != Dir::Up && self.can_go(&coord, Dir::Down) {
+            cost += self.run_path(Coord{ row: coord.row + 1, col: coord.col }, Dir::Up, nodes_to_check);
+        }
+        if from_dir != Dir::Right && self.can_go(&coord, Dir::Left) {
+            cost += self.run_path(Coord{ row: coord.row, col: coord.col - 1 }, Dir::Right, nodes_to_check);
+        }
+        if from_dir != Dir::Down && self.can_go(&coord, Dir::Up) {
+            cost += self.run_path(Coord{ row: coord.row - 1, col: coord.col }, Dir::Down, nodes_to_check);
+        }
+        cost
     }
 
     fn number_of_non_neighbours(&self, coord: &Coord, non_value: char) -> u32 {
