@@ -1,2 +1,0 @@
-/usr/bin/ar qc libday4_lib.a CMakeFiles/day4_lib.dir/src/day4.cpp.o
-/usr/bin/ranlib libday4_lib.a
