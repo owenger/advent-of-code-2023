@@ -16,10 +16,12 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string(input_path)?;
     let mut grid = parse_input(input);
     remove_slopes(&mut grid.grid);
-    println!("{},{}", grid.rows, grid.cols);
+    let node_net = grid.get_node_net();
+    println!("{:?}", node_net);
+    //println!("{},{}", grid.rows, grid.cols);
 
-    let res = dijkstra(&grid);
-    println!("Res: {res}");
+    // let res = dijkstra(&grid);
+    // println!("Res: {res}");
     Ok(())
 }
 
@@ -218,9 +220,10 @@ impl Grid {
         }
     }
 
-    pub fn get_node_net(&self) {
-        let mut nodes: HashMap<Coord, Vec<(Coord, u32)>>; 
+    pub fn get_node_net(&self) -> HashMap<Coord, Vec<(Coord, u32)>> {
+        let mut nodes: HashMap<Coord, Vec<(Coord, u32)>> = HashMap::new(); 
         let mut nodes_to_check: Vec<Coord> = Vec::new();
+        let mut nodes_checked: Vec<Coord> = Vec::new();
 
         nodes_to_check.push(Coord{ row: 0, col: self.get_start_col() });
 
@@ -228,34 +231,60 @@ impl Grid {
             if nodes_to_check.len() == 0 {
                 break;
             }
-            let cur_node = nodes_to_check.pop();
+            let cur_node = nodes_to_check.pop().expect("No node in checklist");
+            nodes_checked.push(cur_node.clone());
 
-            if self.can_go(&cur_node, &Dir::Right) {
-                
-
+            if self.can_go(&cur_node, Dir::Right) {
+                let right_coord = Coord{ row: cur_node.row, col: cur_node.col + 1 };
+                let (right_cost, right_end) = self.run_path(&right_coord, Dir::Left, &mut nodes_to_check, &nodes_checked);
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((right_end, right_cost));
+            }
+            if self.can_go(&cur_node, Dir::Down) {
+                let down_coord = Coord{ row: cur_node.row + 1, col: cur_node.col };
+                let (down_cost, down_end) = self.run_path(&down_coord, Dir::Up, &mut nodes_to_check, &nodes_checked);
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((down_end, down_cost));
+            }
+            if self.can_go(&cur_node, Dir::Left) {
+                let left_coord = Coord{ row: cur_node.row, col: cur_node.col - 1 };
+                let (left_cost, left_end) = self.run_path(&left_coord, Dir::Right, &mut nodes_to_check, &nodes_checked);
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((left_end, left_cost));
+            }
+            if self.can_go(&cur_node, Dir::Up) {
+                let up_coord = Coord{ row: cur_node.row - 1, col: cur_node.col };
+                let (up_cost, up_end) = self.run_path(&up_coord, Dir::Down, &mut nodes_to_check, &nodes_checked);
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((up_end, up_cost));
             }
         }
+        nodes
     }
 
-    fn run_path(&self, coord: Coord, from_dir: Dir, nodes_to_check: &mut Vec<Coord>) -> u32 {
+    fn run_path(&self, coord: &Coord, from_dir: Dir, nodes_to_check: &mut Vec<Coord>, nodes_checked: &Vec<Coord>) -> (u32, Coord) {
         let mut cost: u32 = 1;
-        if self.number_of_non_neighbours(&coord, '#')  > 1 {
-            nodes_to_check.push(coord.clone());
-            return cost;
+        let mut end_node: Coord = Coord{ row: 0, col: 0 };
+        if self.number_of_non_neighbours(&coord, '#')  > 2 {
+            if !nodes_checked.contains(&coord) {
+                nodes_to_check.push(coord.clone());
+            }
+            end_node = coord.clone();
+            return (cost, end_node);
         }
-        if from_dir != Dir::Left && self.can_go(&coord, Dir::Right) {
-            cost += self.run_path(Coord{ row: coord.row, col: coord.col + 1 }, Dir::Left, nodes_to_check);
+        if from_dir != Dir::Right && self.can_go(&coord, Dir::Right) {
+            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row, col: coord.col + 1 }, Dir::Left, nodes_to_check, &nodes_checked);
+            cost += plus_cost;
         }
-        if from_dir != Dir::Up && self.can_go(&coord, Dir::Down) {
-            cost += self.run_path(Coord{ row: coord.row + 1, col: coord.col }, Dir::Up, nodes_to_check);
+        if from_dir != Dir::Down && self.can_go(&coord, Dir::Down) {
+            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row + 1, col: coord.col }, Dir::Up, nodes_to_check, &nodes_checked);
+            cost += plus_cost;
         }
-        if from_dir != Dir::Right && self.can_go(&coord, Dir::Left) {
-            cost += self.run_path(Coord{ row: coord.row, col: coord.col - 1 }, Dir::Right, nodes_to_check);
+        if from_dir != Dir::Left && self.can_go(&coord, Dir::Left) {
+            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row, col: coord.col - 1 }, Dir::Right, nodes_to_check, &nodes_checked);
+            cost += plus_cost;
         }
-        if from_dir != Dir::Down && self.can_go(&coord, Dir::Up) {
-            cost += self.run_path(Coord{ row: coord.row - 1, col: coord.col }, Dir::Down, nodes_to_check);
+        if from_dir != Dir::Up && self.can_go(&coord, Dir::Up) {
+            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row - 1, col: coord.col }, Dir::Down, nodes_to_check, &nodes_checked);
+            cost += plus_cost;
         }
-        cost
+        (cost, end_node)
     }
 
     fn number_of_non_neighbours(&self, coord: &Coord, non_value: char) -> u32 {
@@ -289,12 +318,14 @@ impl Grid {
 #[derive(Debug)]
 #[derive(PartialEq, Eq)]
 #[derive(Clone)]
+#[derive(Hash)]
 struct Coord {
     row: usize,
     col: usize,
 }
 
 #[derive(Eq, PartialEq)]
+#[derive(Debug)]
 enum Dir {
     Right,
     Down,
