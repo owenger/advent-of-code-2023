@@ -17,12 +17,37 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
     let mut grid = parse_input(input);
     remove_slopes(&mut grid.grid);
     let node_net = grid.get_node_net();
-    println!("{:?}", node_net);
-    //println!("{},{}", grid.rows, grid.cols);
+    let start_col = grid.get_start_col();
+    let start_coord = Coord{ row: 0, col: start_col };
+    let res = dijkstrav2(&node_net, start_coord);
 
     // let res = dijkstra(&grid);
     // println!("Res: {res}");
     Ok(())
+}
+
+fn dijkstrav2(net: &HashMap<Coord, Vec<(Coord, u32)>>, start_coord: Coord) -> u32 {
+    let mut visited: Vec<Node> = Vec::new();
+    let mut heap: BinaryHeap<Node> = BinaryHeap::new();
+    let start_node = Node{ cost: 0, coord: start_coord.clone(), history: vec![start_coord.clone()]};
+    heap.push(start_node);
+    let res_cost: u32 = 0;
+    let mut biggest_history: Vec<Coord> = Vec::new();
+
+    loop {
+        if heap.len() == 0 {
+            break;
+        }
+        let cur_node = heap.pop().expect("Heap is empty");
+        let candidates = net.get(&cur_node.coord).unwrap().clone();
+        for candidate in &candidates {
+            if !cur_node.history.contains()
+        }
+
+    }
+
+    0
+
 }
 
 fn dijkstra(grid: &Grid) -> u32 {
@@ -261,7 +286,7 @@ impl Grid {
     fn run_path(&self, coord: &Coord, from_dir: Dir, nodes_to_check: &mut Vec<Coord>, nodes_checked: &Vec<Coord>) -> (u32, Coord) {
         let mut cost: u32 = 1;
         let mut end_node: Coord = Coord{ row: 0, col: 0 };
-        if self.number_of_non_neighbours(&coord, '#')  > 2 {
+        if self.number_of_non_neighbours(&coord, '#')  > 2 || coord.row == 0 || coord.row == self.rows - 1 {
             if !nodes_checked.contains(&coord) {
                 nodes_to_check.push(coord.clone());
             }
@@ -269,19 +294,27 @@ impl Grid {
             return (cost, end_node);
         }
         if from_dir != Dir::Right && self.can_go(&coord, Dir::Right) {
-            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row, col: coord.col + 1 }, Dir::Left, nodes_to_check, &nodes_checked);
+            let result = self.run_path(&Coord{ row: coord.row, col: coord.col + 1 }, Dir::Left, nodes_to_check, &nodes_checked);
+            let plus_cost = result.0;
+            end_node = result.1;
             cost += plus_cost;
         }
         if from_dir != Dir::Down && self.can_go(&coord, Dir::Down) {
-            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row + 1, col: coord.col }, Dir::Up, nodes_to_check, &nodes_checked);
+            let result = self.run_path(&Coord{ row: coord.row + 1, col: coord.col }, Dir::Up, nodes_to_check, &nodes_checked);
+            let plus_cost = result.0;
+            end_node = result.1;
             cost += plus_cost;
         }
         if from_dir != Dir::Left && self.can_go(&coord, Dir::Left) {
-            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row, col: coord.col - 1 }, Dir::Right, nodes_to_check, &nodes_checked);
+            let result = self.run_path(&Coord{ row: coord.row, col: coord.col - 1 }, Dir::Right, nodes_to_check, &nodes_checked);
+            let plus_cost = result.0;
+            end_node = result.1;
             cost += plus_cost;
         }
         if from_dir != Dir::Up && self.can_go(&coord, Dir::Up) {
-            let (plus_cost, end_node) = self.run_path(&Coord{ row: coord.row - 1, col: coord.col }, Dir::Down, nodes_to_check, &nodes_checked);
+            let result = self.run_path(&Coord{ row: coord.row - 1, col: coord.col }, Dir::Down, nodes_to_check, &nodes_checked);
+            let plus_cost = result.0;
+            end_node = result.1;
             cost += plus_cost;
         }
         (cost, end_node)
