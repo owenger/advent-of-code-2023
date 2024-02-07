@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/day6.dir/src/main.cpp.o -o day6  libday6_lib.a 

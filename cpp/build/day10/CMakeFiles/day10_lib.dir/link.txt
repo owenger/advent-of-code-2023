@@ -1,2 +1,0 @@
-/usr/bin/ar qc libday10_lib.a CMakeFiles/day10_lib.dir/src/day10.cpp.o
-/usr/bin/ranlib libday10_lib.a

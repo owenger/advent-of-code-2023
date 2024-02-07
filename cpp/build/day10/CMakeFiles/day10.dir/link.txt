@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/day10.dir/src/main.cpp.o -o day10  libday10_lib.a 

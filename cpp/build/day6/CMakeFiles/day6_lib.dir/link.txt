@@ -1,2 +1,0 @@
-/usr/bin/ar qc libday6_lib.a CMakeFiles/day6_lib.dir/src/day6.cpp.o
-/usr/bin/ranlib libday6_lib.a
