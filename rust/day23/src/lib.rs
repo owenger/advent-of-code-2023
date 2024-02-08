@@ -19,35 +19,64 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
     let node_net = grid.get_node_net();
     let start_col = grid.get_start_col();
     let start_coord = Coord{ row: 0, col: start_col };
-    let res = dijkstrav2(&node_net, start_coord);
+    let res = dijkstrav2(&node_net, start_coord, grid.rows - 1);
 
     // let res = dijkstra(&grid);
-    // println!("Res: {res}");
+    println!("Res: {res}");
     Ok(())
 }
 
-fn dijkstrav2(net: &HashMap<Coord, Vec<(Coord, u32)>>, start_coord: Coord) -> u32 {
+fn dijkstrav2(net: &HashMap<Coord, Vec<(Coord, u32)>>, start_coord: Coord, end_row: usize) -> u32 {
     let mut visited: Vec<Node> = Vec::new();
-    let mut heap: BinaryHeap<Node> = BinaryHeap::new();
+    let mut node_vec: Vec<Node> = Vec::new();
+    let mut costs: HashMap<Coord, u32> = HashMap::new();
     let start_node = Node{ cost: 0, coord: start_coord.clone(), history: vec![start_coord.clone()]};
-    heap.push(start_node);
-    let res_cost: u32 = 0;
+    node_vec.push(start_node);
+    let mut res_cost: u32 = 0;
     let mut biggest_history: Vec<Coord> = Vec::new();
+    let mut max_dist: usize = 0;
 
     loop {
-        if heap.len() == 0 {
+        if node_vec.len() == 0 {
             break;
         }
-        let cur_node = heap.pop().expect("Heap is empty");
+        let cur_node = node_vec.pop().expect("Heap is empty");
+        let dist = cur_node.coord.row + cur_node.coord.col;
+        if dist > max_dist {
+            println!("Dist: {dist}");
+            max_dist = dist;
+        }
+        visited.push(cur_node.clone());
+        if cur_node.coord.row == end_row {
+            if cur_node.cost > res_cost {
+                res_cost = cur_node.cost;
+                biggest_history = cur_node.history.clone();
+            }
+        }
         let candidates = net.get(&cur_node.coord).unwrap().clone();
         for candidate in &candidates {
-            if !cur_node.history.contains()
+            if !cur_node.history.contains(&candidate.0) {
+                let mut new_history = cur_node.history.clone();
+                new_history.push(candidate.0.clone());
+                let new_node = Node{
+                    cost: cur_node.cost + candidate.1,
+                    coord: candidate.0.clone(),
+                    history: new_history,
+                };
+                if !visited.contains(&new_node) {
+                    let prev_cost = costs.get(&cur_node.coord).unwrap_or(0);
+                    if prev_cost > new_node.cost {
+                        continue;
+                    }
+                    costs.insert(cur_node.coord.clone(), cur_node.cost);
+                    node_vec.push(new_node);
+                }
+            }
         }
 
     }
-
-    0
-
+    println!("{:?}", biggest_history);
+    res_cost
 }
 
 fn dijkstra(grid: &Grid) -> u32 {
@@ -165,6 +194,7 @@ fn print_history(history: &Vec<(usize, usize)>, rows: usize, cols: usize) {
 
 #[derive(Debug)]
 #[derive(PartialEq, Eq)]
+#[derive(Clone)]
 struct Node {
     cost: u32,
     coord: Coord,
