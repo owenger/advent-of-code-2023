@@ -1,5 +1,6 @@
 use std::fs;
 use std::error::Error;
+use std::collections::BinaryHeap;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
@@ -7,13 +8,12 @@ pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string(input_path)?;
     let grid = parse_input(input);
     let node_net = grid.get_node_net();
+    println!("{:?}", node_net);
     let start_col = grid.get_start_col();
-    let end_col = grid.get_end_col();
     let start_coord = Coord{ row: 0, col: start_col };
-    let end_coord = Coord { row: grid.rows - 1, col: end_col };
-    let mut history: HashMap<u16, (bool, u8)> = HashMap::new();
-    let res = dfs(&node_net, &mut history, start_coord.hash(), end_coord.hash(), 0, 0);
+    let res = dijkstrav2(&node_net, start_coord, grid.rows - 1);
     println!("Res: {res}");
+    //let res = dijkstra(&grid);
     Ok(())
 }
 
@@ -23,39 +23,60 @@ pub fn run_part_2(input_path: String) -> Result<(), Box<dyn Error>> {
     remove_slopes(&mut grid.grid);
     let node_net = grid.get_node_net();
     let start_col = grid.get_start_col();
-    let end_col = grid.get_end_col();
     let start_coord = Coord{ row: 0, col: start_col };
-    let end_coord = Coord { row: grid.rows - 1, col: end_col };
-    let mut history: HashMap<u16, (bool, u8)> = HashMap::new();
-    let res = dfs(&node_net, &mut history, start_coord.hash(), end_coord.hash(), 0, 0);
+    let res = dijkstrav2(&node_net, start_coord, grid.rows - 1);
+
+    // let res = dijkstra(&grid);
     println!("Res: {res}");
     Ok(())
 }
 
-fn dfs(net: &HashMap<u16, Vec<(u16, u32)>>, history: &mut HashMap<u16, (bool, u8)>, hash: u16, end_hash: u16, cost: u32, depth: u8) -> u32 {
-    if hash == end_hash {
-        return cost;
-    }
+fn dijkstrav2(net: &HashMap<Coord, Vec<(Coord, u32)>>, start_coord: Coord, end_row: usize) -> u32 {
+    let mut node_vec: Vec<Node> = Vec::new();
+    let start_node = Node{ cost: 0, coord: start_coord.clone(), history: vec![start_coord.clone()]};
+    node_vec.push(start_node);
+    let mut res_cost: u32 = 0;
+    let mut biggest_history: Vec<Coord> = Vec::new();
+    let mut count: u32 = 0;
 
-    if let Some(&have_been) = history.get(&hash) {
-        if have_been.0 {
-            return 0;
+    loop {
+        if node_vec.len() == 0 {
+            break;
         }
-    }
-    history.insert(hash, (true, depth));
-
-    let mut highest_cost: u32 = 0;
-
-    if let Some(candidates) = net.get(&hash) {
-        for candidate in candidates {
-            let cost_candidate = dfs(net, history, candidate.0, end_hash, cost + candidate.1, depth + 1);
-            if cost_candidate > highest_cost {
-                highest_cost = cost_candidate;
+        count += 1;
+        if count % 1000000 == 0 {
+            println!("Count: {count}");
+        }
+        let cur_node = node_vec.pop().expect("Heap is empty");
+        if cur_node.coord.row == end_row {
+            if cur_node.cost > res_cost {
+                res_cost = cur_node.cost;
+                println!("Res cost: {res_cost}");
+                biggest_history = cur_node.history.clone();
+            }
+        }
+        if !net.contains_key(&cur_node.coord) {
+            continue;
+        }
+        let candidates = net.get(&cur_node.coord).unwrap().clone();
+        if candidates.len() == 1 && candidates[0].0 == (Coord{ row: 0, col: 0 }) {
+            continue;
+        }
+        for candidate in &candidates {
+            if !cur_node.history.contains(&candidate.0) {
+                let mut new_history = cur_node.history.clone();
+                new_history.push(candidate.0.clone());
+                let new_node = Node{
+                    cost: cur_node.cost + candidate.1,
+                    coord: candidate.0.clone(),
+                    history: new_history,
+                };
+                node_vec.push(new_node);
             }
         }
     }
-    history.insert(hash, (false, 0));
-    highest_cost
+    println!("{:?}", biggest_history);
+    res_cost
 }
 
 fn parse_input(input: String) -> Grid {
@@ -73,17 +94,10 @@ fn remove_slopes(input: &mut Vec<Vec<char>>) {
     }
 }
 
-fn print_history_dict(history: &HashMap<u16, (bool, u8)>, rows: usize, cols: usize ) {
-    let mut vec: Vec<(Coord, u8)> = Vec::new();
-    for (key, value) in history {
-        if value.0 {
-            vec.push((Coord::unhash(*key), value.1));
-        }
-    }
-
-    let mut show_vec: Vec<Vec<String>> = vec![vec![String::from("."); cols]; rows];
-    for moment in vec {
-        show_vec[moment.0.row][moment.0.col] = moment.1.to_string();
+fn print_history(history: &Vec<Coord>, rows: usize, cols: usize) {
+    let mut show_vec: Vec<Vec<char>> = vec![vec!['.'; cols]; rows];
+    for moment in history {
+        show_vec[moment.row][moment.col] = '#';
     }
     for row in show_vec {
         println!("{:?}", row);
@@ -109,6 +123,13 @@ impl Ord for Node {
     fn cmp(&self, other: &Self) -> Ordering {
         other.cost.cmp(&self.cost)
     }
+}
+
+#[derive(Debug)]
+struct SparseGrid {
+    grid: Vec<Vec<char>>,
+    rows: usize,
+    cols: usize,
 }
 
 #[derive(Debug)]
@@ -173,8 +194,8 @@ impl Grid {
         }
     }
 
-    pub fn get_node_net(&self) -> HashMap<u16, Vec<(u16, u32)>> {
-        let mut nodes: HashMap<u16, Vec<(u16, u32)>> = HashMap::new(); 
+    pub fn get_node_net(&self) -> HashMap<Coord, Vec<(Coord, u32)>> {
+        let mut nodes: HashMap<Coord, Vec<(Coord, u32)>> = HashMap::new(); 
         let mut nodes_to_check: Vec<Coord> = Vec::new();
         let mut nodes_checked: Vec<Coord> = Vec::new();
 
@@ -190,30 +211,32 @@ impl Grid {
 
             let can_go_right = self.can_go(&cur_node, Dir::Right);
             let can_go_down = self.can_go(&cur_node, Dir::Down);
-            let can_go_left_prov = self.can_go(&cur_node, Dir::Left);
-            let can_go_up_prov = self.can_go(&cur_node, Dir::Up);
-            let can_go_left = can_go_left_prov && can_go_down && can_go_up_prov;
-            let can_go_up = can_go_up_prov && can_go_right && can_go_left_prov;
+            let mut can_go_left = self.can_go(&cur_node, Dir::Left);
+            let mut can_go_up = self.can_go(&cur_node, Dir::Up);
+
+            can_go_left &= can_go_down;
+            can_go_up &= can_go_right;
+
 
             if can_go_right {
                 let right_coord = Coord{ row: cur_node.row, col: cur_node.col + 1 };
                 let (right_cost, right_end) = self.run_path(&right_coord, Dir::Left, &mut nodes_to_check, &nodes_checked, debug);
-                nodes.entry(cur_node.hash()).or_insert_with(Vec::new).push((right_end.hash(), right_cost));
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((right_end, right_cost));
             }
             if can_go_down {
                 let down_coord = Coord{ row: cur_node.row + 1, col: cur_node.col };
                 let (down_cost, down_end) = self.run_path(&down_coord, Dir::Up, &mut nodes_to_check, &nodes_checked, debug);
-                nodes.entry(cur_node.hash()).or_insert_with(Vec::new).push((down_end.hash(), down_cost));
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((down_end, down_cost));
             }
             if can_go_left {
                 let left_coord = Coord{ row: cur_node.row, col: cur_node.col - 1 };
                 let (left_cost, left_end) = self.run_path(&left_coord, Dir::Right, &mut nodes_to_check, &nodes_checked, debug);
-                nodes.entry(cur_node.hash()).or_insert_with(Vec::new).push((left_end.hash(), left_cost));
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((left_end, left_cost));
             }
             if can_go_up {
                 let up_coord = Coord{ row: cur_node.row - 1, col: cur_node.col };
                 let (up_cost, up_end) = self.run_path(&up_coord, Dir::Down, &mut nodes_to_check, &nodes_checked, debug);
-                nodes.entry(cur_node.hash()).or_insert_with(Vec::new).push((up_end.hash(), up_cost));
+                nodes.entry(cur_node.clone()).or_insert_with(Vec::new).push((up_end, up_cost));
             }
         }
         nodes
@@ -223,7 +246,7 @@ impl Grid {
         let mut cost: u32 = 1;
         let mut end_node: Coord = Coord{ row: 0, col: 0 };
         if self.number_of_non_neighbours(&coord, '#')  > 2 || coord.row == 0 || coord.row == self.rows - 1 {
-            if !nodes_checked.contains(&coord) && !nodes_to_check.contains(&coord) {
+            if !nodes_checked.contains(&coord) {
                 nodes_to_check.push(coord.clone());
             }
             end_node = coord.clone();
@@ -282,16 +305,6 @@ impl Grid {
         println!("Could not find starting col.");
         0
     }
-
-    pub fn get_end_col(&self) -> usize {
-        for i in 0..self.grid.first().map_or(0, Vec::len) {
-            if self.grid[self.rows - 1][i] == '.' {
-                return i;
-            }
-        }
-        println!("Could not find starting col.");
-        0
-    }
 }
 
 #[derive(Debug)]
@@ -301,16 +314,6 @@ impl Grid {
 struct Coord {
     row: usize,
     col: usize,
-}
-
-impl Coord {
-    pub fn hash(&self) -> u16 {
-        (self.row * 200 + self.col) as u16
-    }
-
-    pub fn unhash(number: u16) -> Coord {
-        Coord{ row: (number / 200) as usize, col: (number % 200) as usize }
-    }
 }
 
 #[derive(Eq, PartialEq)]
