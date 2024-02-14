@@ -61,7 +61,7 @@ impl Line {
         let y_diff: f64 = other.y - self.y;
 
         let t: f64 = (x_diff * other.v - y_diff * other.u) / det;
-        let s: f64 = (x_diff * self.u - y_diff * self.v) / -det;
+        let s: f64 = (x_diff * self.v - y_diff * other.v) / -det;
 
 
         let x_new = self.x + t * self.u;
