@@ -16,6 +16,12 @@ pub fn run_part_1(input_path: String, test: bool) -> Result<(), Box<dyn Error>> 
     Ok(())
 }
 
+pub fn run_part_2(input_path: String, test: bool) -> Result<(), Box<dyn Error>> {
+    let input = fs::read_to_string(input_path)?;
+    let lines = parse_input(input);
+    Ok(())
+}
+
 fn calculate2dboxcrosses(lines: Vec<Line>, min: f64, max: f64) -> u32 {
     let mut count: u32 = 0;
     for i in 0..lines.len() {
