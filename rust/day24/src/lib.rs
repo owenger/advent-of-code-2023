@@ -3,22 +3,31 @@ use std::error::Error;
 use std::collections::HashMap;
 use regex::Regex;
 
-pub fn run_part_1(input_path: String) -> Result<(), Box<dyn Error>> {
+pub fn run_part_1(input_path: String, test: bool) -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string(input_path)?;
     let lines = parse_input(input);
-    run_vec(lines);
+    let mut total: u32 = 0;
+    if test {
+        total = calculate2dboxcrosses(lines, 7.0, 27.0);
+    } else {
+        total = calculate2dboxcrosses(lines, 200000000000000.0, 400000000000000.0);
+    }
+    println!("Total: {total}");
     Ok(())
 }
 
-fn run_vec(lines: Vec<Line>) {
+fn calculate2dboxcrosses(lines: Vec<Line>, min: f64, max: f64) -> u32 {
+    let mut count: u32 = 0;
     for i in 0..lines.len() {
-        for j in 0..lines.len() {
-            if i == j {
-                continue;
+        for j in i+1..lines.len() {
+            if let Some((cross_x, cross_y)) = lines[i].crosses2d(&lines[j]) {
+                if cross_x >= min && cross_x <= max && cross_y >= min && cross_y <= max {
+                    count += 1;
+                }
             }
-            lines[i].crosses2d(&lines[j]);
         }
     }
+    return count;
 }
 
 fn parse_input(input: String) -> Vec<Line> {
@@ -61,15 +70,17 @@ impl Line {
         let y_diff: f64 = other.y - self.y;
 
         let t: f64 = (x_diff * other.v - y_diff * other.u) / det;
-        let s: f64 = (x_diff * self.u - y_diff * self.v) / -det;
+        let s: f64 = (x_diff * self.v - y_diff * self.u) / det;
+
+        if t < 0.0 || s < 0.0 {
+            return None;
+        }
 
 
-        let x_new = self.x + t * self.u;
-        let x_new2 = other.x + s * other.u;
-        println!("{x_new}");
-        println!("{x_new2}\n\n");
+        let x_intersect = self.x + t * self.u;
+        let y_intersect = self.y + t * self.v;
 
-        return None;
+        Some((x_intersect, y_intersect))
     }
 }
 
